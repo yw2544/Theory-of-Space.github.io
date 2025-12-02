@@ -1,4 +1,12 @@
 // Dataset Viewer JavaScript functionality for Theory of Space Dataset
+const RAW_BASE_PATH = import.meta.env.BASE_URL ?? '/';
+const NORMALIZED_BASE_PATH = RAW_BASE_PATH.endsWith('/') ? RAW_BASE_PATH : `${RAW_BASE_PATH}/`;
+
+const withBasePath = (path = '') => {
+  const normalizedPath = path.startsWith('/') ? path.slice(1) : path;
+  return `${NORMALIZED_BASE_PATH}${normalizedPath}`;
+};
+
 class DatasetViewer {
   constructor() {
     this.allData = [];
@@ -31,7 +39,7 @@ class DatasetViewer {
 
   async loadData() {
     try {
-      const response = await fetch('/data_viewer/QA/enact_ordering.jsonl');
+      const response = await fetch(withBasePath('data_viewer/QA/enact_ordering.jsonl'));
       const text = await response.text();
       
       // Parse JSONL
@@ -210,7 +218,7 @@ class DatasetViewer {
               <div class="images-grid ${gridClass}">
                 ${images.map((img, index) => `
                   <div class="image-item">
-                    <img src="/data_viewer/${img}" 
+                    <img src="${withBasePath('data_viewer/' + img)}" 
                          alt="Layout Image ${index + 1}" 
                          onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\\'image-error\\'>Image not found</div>'"
                          loading="lazy">

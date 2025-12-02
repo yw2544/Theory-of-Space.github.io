@@ -6,6 +6,9 @@ import Header from '../components/Header.astro'; // Import the Header component 
 import Footer from '../components/Footer.astro';
 
 const { title } = Astro.props;
+const rawBase = import.meta.env.BASE_URL ?? '/';
+const normalizedBase = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
+const assetPath = (path) => `${normalizedBase}${path.replace(/^\//, '')}`;
 ---
 <!doctype html>
 <html lang="en">
@@ -13,8 +16,8 @@ const { title } = Astro.props;
         <meta charset="UTF-8" />
         <meta name="description" content="Astro description" />
         <meta name="viewport" content="width=device-width" />
-        <link rel="icon" type="image/png" href="/icon.png" />
-        <link rel="apple-touch-icon" href="/icon.png" />
+        <link rel="icon" type="image/png" href={assetPath('icon.png')} />
+        <link rel="apple-touch-icon" href={assetPath('icon.png')} />
         <meta name="generator" content={Astro.generator} />
         <title>{title}</title>
         {/* We can link fonts or global styles here if necessary */}

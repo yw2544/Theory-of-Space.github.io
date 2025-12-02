@@ -40,6 +40,16 @@ interface TaskIndex {
   tasks: Task[];
 }
 
+const rawBasePath = import.meta.env.BASE_URL ?? '/';
+const normalizedBasePath = rawBasePath.endsWith('/') ? rawBasePath : `${rawBasePath}/`;
+const isAbsoluteUrl = (value: string) => /^https?:\/\//.test(value);
+const resolveAssetPath = (path: string) => {
+  if (!path) return '';
+  if (isAbsoluteUrl(path)) return path;
+  const trimmed = path.replace(/^\//, '');
+  return `${normalizedBasePath}${trimmed}`;
+};
+
 // Initialize the trajectory viewer
 export function initTrajectoryViewer() {
   // Element references
@@ -93,7 +103,7 @@ export function initTrajectoryViewer() {
     try {
       showLoading();
       
-      const response = await fetch('/data/trajectories/qwen2.5-0.5b/index.json');
+      const response = await fetch(resolveAssetPath('data/trajectories/qwen2.5-0.5b/index.json'));
       if (!response.ok) {
         throw new Error(`Failed to load task index: ${response.status} ${response.statusText}`);
       }
@@ -134,7 +144,7 @@ export function initTrajectoryViewer() {
       }
       
       // Load the task data file
-      const response = await fetch(taskInfo.dataFile);
+      const response = await fetch(resolveAssetPath(taskInfo.dataFile));
       if (!response.ok) {
         throw new Error(`Failed to load task data: ${response.status} ${response.statusText}`);
       }
@@ -263,7 +273,7 @@ export function initTrajectoryViewer() {
     }
     
     // Update state and action display
-    if (stateImageElement) stateImageElement.src = step.state.image || '/placeholder-state.png';
+    if (stateImageElement) stateImageElement.src = resolveAssetPath(step.state.image) || resolveAssetPath('placeholder-state.png');
     if (stateTextElement) stateTextElement.textContent = step.state.description || '';
     if (reasoningTextElement) reasoningTextElement.innerHTML = `<p>${step.reasoning || ''}</p>`;
     if (actionTextElement) actionTextElement.textContent = step.action || '';
