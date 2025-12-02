@@ -1,0 +1,420 @@
+---
+// Algorithm.astro - Leaderboard section showing model performance comparisons
+---
+
+<section id="leaderboard" class="content-section alt-background">
+  <div class="section-container">
+    <h2 class="section-title">Leaderboard</h2>
+    <p class="section-description">Performance comparison of different models on Theory of Space (ToS) benchmark. Dark highlighting indicates the best result within each category, light highlighting denotes the second-best.</p>
+    
+    <div class="leaderboard-container">
+      <!-- Main Mode Tabs -->
+      <div class="metric-tabs main-tabs">
+        <button class="metric-tab active" data-mode="active">Active Exploration</button>
+        <button class="metric-tab" data-mode="passive">Passive Understanding</button>
+      </div>
+
+      <!-- Environment Toggle -->
+      <div class="env-toggle-container">
+        <div class="env-toggle">
+          <button class="env-btn active" data-env="vision">Vision-based World</button>
+          <button class="env-btn" data-env="text">Text-based World</button>
+        </div>
+      </div>
+
+      <div class="table-controls">
+        <div class="model-legend">
+          <span class="legend-item">
+            <span class="legend-color proprietary-legend"></span>
+            Proprietary Models
+          </span>
+          <span class="legend-item">
+            <span class="legend-color open-weight-legend"></span>
+            Open-source Models
+          </span>
+        </div>
+      </div>
+      
+      <div class="table-wrapper">
+        <table class="leaderboard-table" id="leaderboardTable">
+          <thead id="tableHeader">
+            <!-- Header populated by JS -->
+          </thead>
+          <tbody id="leaderboardBody">
+            <!-- Data populated by JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style is:global>
+  #leaderboard .section-container {
+    max-width: 1300px;
+  }
+
+  #leaderboard .leaderboard-container {
+    margin: 2rem 0;
+  }
+
+  /* Main Tabs */
+  #leaderboard .main-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  #leaderboard .metric-tab {
+    padding: 0.75rem 2rem;
+    background: white;
+    border: 2px solid #2a2f6c;
+    border-radius: 8px;
+    color: #2a2f6c;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  #leaderboard .metric-tab:hover {
+    background: #f0f4ff;
+  }
+
+  #leaderboard .metric-tab.active {
+    background: #2a2f6c;
+    color: white;
+  }
+
+  /* Environment Toggle */
+  #leaderboard .env-toggle-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+  }
+
+  #leaderboard .env-toggle {
+    background: #e0e0e0;
+    padding: 4px;
+    border-radius: 8px;
+    display: inline-flex;
+  }
+
+  #leaderboard .env-btn {
+    padding: 0.5rem 1.5rem;
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    color: #555;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  #leaderboard .env-btn.active {
+    background: white;
+    color: #2a2f6c;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+
+  /* Legend */
+  #leaderboard .model-legend {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  #leaderboard .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: #555;
+  }
+
+  #leaderboard .legend-color {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+  }
+
+  #leaderboard .proprietary-legend { background-color: #FFF4F0; }
+  #leaderboard .open-weight-legend { background-color: #F8F0FF; }
+
+  /* Table */
+  #leaderboard .table-wrapper {
+    overflow-x: auto;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    background: white;
+  }
+
+  #leaderboard .leaderboard-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+  }
+
+  #leaderboard th {
+    padding: 0.8rem 0.5rem;
+    text-align: center;
+    border: 1px solid #eee;
+  }
+
+  #leaderboard .model-header {
+    text-align: left;
+    padding-left: 1rem;
+    background: #f8f9fa;
+    font-weight: 700;
+    min-width: 180px;
+  }
+
+  #leaderboard .group-header {
+    font-weight: 700;
+    color: #2a2f6c;
+  }
+  
+  #leaderboard .sub-group-header {
+    font-weight: 600;
+    background: #f0f4ff;
+    font-style: italic;
+  }
+
+  #leaderboard .col-header {
+    font-size: 0.85rem;
+    background: #fff;
+    vertical-align: bottom;
+  }
+  
+  #leaderboard .col-header span {
+    display: inline-block;
+    /* writing-mode: vertical-rl; */
+    /* transform: rotate(180deg); */
+    white-space: nowrap;
+    /* height: 80px; */
+    line-height: 1.2;
+  }
+
+  #leaderboard td {
+    padding: 0.6rem 0.4rem;
+    text-align: center;
+    border: 1px solid #eee;
+  }
+
+  #leaderboard .model-name {
+    text-align: left;
+    padding-left: 1rem;
+    font-weight: 600;
+    color: #333;
+  }
+
+  #leaderboard .proprietary-row { background-color: #FFF4F0; }
+  #leaderboard .openweight-row { background-color: #F8F0FF; }
+
+  #leaderboard .best-score {
+    background-color: rgba(100, 100, 100, 0.25);
+    font-weight: 700;
+  }
+
+  #leaderboard .second-best-score {
+    background-color: rgba(169, 169, 169, 0.15);
+    font-weight: 600;
+  }
+  
+  /* Exp cost column special styling */
+  #leaderboard .exp-cost {
+    background-color: #fffbf0;
+    border-right: 2px solid #eee;
+  }
+  
+  #leaderboard .avg-col {
+    background-color: #f8f9fa;
+    font-weight: 700;
+    border-left: 2px solid #eee;
+  }
+</style>
+
+<script>
+  // Data from Table 1 and Table 2
+  const tosData = {
+    active: {
+      vision: [
+        { type: 'proprietary', name: 'GPT-5', exp: 8.0, route: [0.43, 0.58, 0.49], survey: [0.48, 0.77, 0.68, 0.84, 0.48], avg: 0.59 },
+        { type: 'proprietary', name: 'GEMINI-2.5 PRO', exp: 10.3, route: [0.49, 0.52, 0.59], survey: [0.48, 0.71, 0.64, 0.93, 0.57], avg: 0.62 },
+        { type: 'proprietary', name: 'Claude-4-sonnet', exp: 17.4, route: [0.27, 0.34, 0.34], survey: [0.35, 0.31, 0.47, 0.53, 0.18], avg: 0.35 },
+        { type: 'openweight', name: 'GLM-4.5V', exp: 15.4, route: [0.25, 0.29, 0.37], survey: [0.34, 0.21, 0.44, 0.47, 0.22], avg: 0.34 }
+      ],
+      text: [
+        { type: 'proprietary', name: 'GPT-5', exp: 6.7, route: [0.73, 0.83, 0.70], survey: [0.93, 0.9, 0.85, 0.91, 0.86], avg: 0.84 },
+        { type: 'proprietary', name: 'GEMINI-2.5 PRO', exp: 8.9, route: [0.67, 0.71, 0.71], survey: [0.83, 0.79, 0.67, 0.93, 0.68], avg: 0.75 },
+        { type: 'proprietary', name: 'Claude-4-sonnet', exp: 10.6, route: [0.27, 0.47, 0.35], survey: [0.44, 0.33, 0.59, 0.61, 0.19], avg: 0.41 },
+        { type: 'openweight', name: 'GLM-4.5V', exp: 12.4, route: [0.28, 0.32, 0.31], survey: [0.33, 0.29, 0.40, 0.57, 0.25], avg: 0.34 },
+        { type: 'openweight', name: 'InternVL-3.5', exp: 12.6, route: [0.35, 0.37, 0.32], survey: [0.43, 0.43, 0.40, 0.62, 0.07], avg: 0.38 }
+      ]
+    },
+    passive: {
+      vision: [
+        { type: 'proprietary', name: 'GPT-5', route: [0.43, 0.54, 0.59], survey: [0.48, 0.76, 0.61, 0.88, 0.52], avg: 0.60 },
+        { type: 'proprietary', name: 'GEMINI-2.5 PRO', route: [0.43, 0.48, 0.56], survey: [0.46, 0.75, 0.60, 0.90, 0.57], avg: 0.59 },
+        { type: 'proprietary', name: 'Claude-4', route: [0.24, 0.36, 0.37], survey: [0.36, 0.29, 0.41, 0.57, 0.23], avg: 0.35 },
+        { type: 'openweight', name: 'GLM-4.5V', route: [0.28, 0.31, 0.35], survey: [0.32, 0.24, 0.43, 0.49, 0.15], avg: 0.32 }
+      ],
+      text: [
+        { type: 'proprietary', name: 'GPT-5', route: [0.84, 0.92, 0.84], survey: [0.96, 0.93, 0.97, 0.93, 0.90], avg: 0.92 },
+        { type: 'proprietary', name: 'GEMINI-2.5 PRO', route: [0.58, 0.72, 0.75], survey: [0.80, 0.77, 0.73, 0.93, 0.61], avg: 0.74 },
+        { type: 'proprietary', name: 'Claude-4', route: [0.27, 0.47, 0.35], survey: [0.44, 0.33, 0.59, 0.61, 0.19], avg: 0.41 },
+        { type: 'openweight', name: 'GLM-4.5V', route: [0.32, 0.35, 0.38], survey: [0.42, 0.29, 0.37, 0.59, 0.17], avg: 0.36 },
+        { type: 'openweight', name: 'InternVL-3.5', route: [0.34, 0.41, 0.32], survey: [0.43, 0.42, 0.45, 0.71, 0.11], avg: 0.40 }
+      ]
+    }
+  };
+
+  // Highlights logic (manually calculated based on paper highlighting)
+  // 1 = Best (Dark), 2 = Second Best (Light)
+  const highlights = {
+    active: {
+      vision: {
+        // Columns: exp, r1, r2, r3, s1, s2, s3, s4, s5, avg
+        'GPT-5': [1, 0, 1, 0, 1, 1, 1, 0, 0, 0],
+        'GEMINI-2.5 PRO': [2, 1, 2, 1, 1, 2, 2, 1, 1, 1],
+        'GLM-4.5V': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      },
+      text: {
+        'GPT-5': [1, 1, 1, 0, 1, 1, 1, 0, 1, 1],
+        'GEMINI-2.5 PRO': [2, 2, 2, 1, 2, 2, 2, 1, 2, 2],
+        'InternVL-3.5': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      }
+    },
+    passive: {
+      vision: {
+        'GPT-5': [1, 1, 1, 1, 1, 1, 0, 0, 1], // Best
+        'GEMINI-2.5 PRO': [1, 2, 2, 2, 2, 2, 1, 1, 2] // Second
+      },
+      text: {
+        'GPT-5': [1, 1, 1, 1, 1, 1, 1, 1, 1],
+        'GEMINI-2.5 PRO': [2, 2, 2, 2, 2, 2, 1, 2, 2]
+      }
+    }
+  };
+
+  let currentMode = 'active'; // active | passive
+  let currentEnv = 'vision'; // vision | text
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const modeTabs = document.querySelectorAll('.metric-tab');
+    const envBtns = document.querySelectorAll('.env-btn');
+
+    modeTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        modeTabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        currentMode = (tab as HTMLElement).dataset.mode;
+        renderTable();
+      });
+    });
+
+    envBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        envBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentEnv = (btn as HTMLElement).dataset.env;
+        renderTable();
+      });
+    });
+
+    renderTable();
+  });
+
+  function renderTable() {
+    const thead = document.getElementById('tableHeader');
+    const tbody = document.getElementById('leaderboardBody');
+    if (!thead || !tbody) return;
+
+    // 1. Render Header
+    let headerHtml = '';
+    const hasExp = currentMode === 'active';
+    const routeColSpan = 3;
+    const surveyColSpan = 5;
+    
+    // Row 1: Group Headers
+    headerHtml += `<tr>`;
+    headerHtml += `<th rowspan="3" class="model-header">Methods</th>`;
+    if (hasExp) headerHtml += `<th rowspan="3" class="exp-cost">Exp.<br>cost</th>`;
+    headerHtml += `<th colspan="${routeColSpan}" class="group-header">Route</th>`;
+    headerHtml += `<th colspan="${surveyColSpan}" class="group-header">Survey</th>`;
+    headerHtml += `<th rowspan="3" class="avg-col">Avg.</th>`;
+    headerHtml += `</tr>`;
+
+    // Row 2: Sub-Group Headers (Static/Dynamic)
+    headerHtml += `<tr>`;
+    headerHtml += `<th class="sub-group-header">Static (S)</th>`;
+    headerHtml += `<th colspan="2" class="sub-group-header">Dynamic (D)</th>`;
+    headerHtml += `<th class="sub-group-header">Static (S)</th>`;
+    headerHtml += `<th colspan="4" class="sub-group-header">Dynamic (D)</th>`;
+    headerHtml += `</tr>`;
+
+    // Row 3: Metric Headers (Vertical)
+    headerHtml += `<tr>`;
+    headerHtml += `<th class="col-header"><span>direction</span></th>`;
+    headerHtml += `<th class="col-header"><span>act2view</span></th>`;
+    headerHtml += `<th class="col-header"><span>view2act</span></th>`;
+    headerHtml += `<th class="col-header"><span>alloc.map</span></th>`;
+    headerHtml += `<th class="col-header"><span>ment.rot</span></th>`;
+    headerHtml += `<th class="col-header"><span>loc2view</span></th>`;
+    headerHtml += `<th class="col-header"><span>rot.dir</span></th>`;
+    headerHtml += `<th class="col-header"><span>view2loc</span></th>`;
+    headerHtml += `</tr>`;
+
+    thead.innerHTML = headerHtml;
+
+    // 2. Render Body
+    tbody.innerHTML = '';
+    const dataList = tosData[currentMode][currentEnv];
+    const hlRules = highlights[currentMode][currentEnv];
+
+    dataList.forEach(model => {
+      const tr = document.createElement('tr');
+      tr.className = model.type === 'proprietary' ? 'proprietary-row' : 'openweight-row';
+      
+      let html = `<td class="model-name">${model.name}</td>`;
+      
+      // Highlight logic (Simple approximation for now based on model name match)
+      // Note: Accurate highlighting per cell is complex to hardcode perfectly without a huge map,
+      // so I implemented a basic lookup based on the provided highlights object.
+      
+      const modelHl = hlRules[model.name] || [];
+      let colIdx = 0;
+
+      if (hasExp) {
+        const hl = modelHl[colIdx++] || 0;
+        const cls = hl === 1 ? 'best-score' : (hl === 2 ? 'second-best-score' : '');
+        html += `<td class="exp-cost ${cls}">${model.exp.toFixed(1)}</td>`;
+      }
+
+      // Route
+      model.route.forEach(val => {
+        const hl = modelHl[colIdx++] || 0;
+        const cls = hl === 1 ? 'best-score' : (hl === 2 ? 'second-best-score' : '');
+        html += `<td class="${cls}">${val.toFixed(2)}</td>`;
+      });
+
+      // Survey
+      model.survey.forEach(val => {
+        const hl = modelHl[colIdx++] || 0;
+        const cls = hl === 1 ? 'best-score' : (hl === 2 ? 'second-best-score' : '');
+        html += `<td class="${cls}">${val.toFixed(2)}</td>`;
+      });
+
+      // Avg
+      const avgHl = modelHl[colIdx] || 0;
+      const avgCls = avgHl === 1 ? 'best-score' : (avgHl === 2 ? 'second-best-score' : '');
+      html += `<td class="avg-col ${avgCls}">${model.avg.toFixed(2)}</td>`;
+
+      tr.innerHTML = html;
+      tbody.appendChild(tr);
+    });
+  }
+</script> 

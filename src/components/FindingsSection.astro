@@ -1,0 +1,455 @@
+---
+// FindingsSection.astro - Key findings with interactive visualizations
+---
+<section id="results" class="content-section">
+  <div class="section-container">
+    <h2 class="section-title">Key Findings</h2>
+    <p class="section-description">Our analysis of foundation models on the ToS benchmark reveals significant insights into their spatial belief construction capabilities.</p>
+
+    <div class="findings-sections">
+      <div class="finding-category">
+        <h3 class="category-title">Findings from Theory of Space Tasks</h3>
+        
+        <div class="takeaways-box">
+          <div class="takeaway-header">
+            <span class="bulb-icon">💡</span>
+            <h4>Key Takeaways</h4>
+          </div>
+          <ul class="takeaway-list">
+            <li>
+              <strong>Modality Gap:</strong> Text-based models consistently outperform vision-based models across both active exploration and passive understanding tasks.
+            </li>
+            <li>
+              <strong>Active vs. Passive:</strong> While proprietary models show strong performance in passive understanding, their performance drops in active exploration tasks.
+            </li>
+            <li>
+              <strong>Reasoning Capabilities:</strong> Models generally perform better on Survey-level reasoning than Route-level reasoning.
+            </li>
+          </ul>
+        </div>
+
+        <div class="category-content active">
+          
+          <!-- SECTION 1: VISION-BASED WORLD -->
+          <div class="world-section">
+            <h4 class="world-title">Vision-based World Performance</h4>
+            <p class="world-caption">Performance metrics across 8 spatial tasks in the Vision-based environment. InternVL is not evaluated in this setting.</p>
+            
+            <div class="visualization-container">
+              <!-- Left: Radar Chart -->
+              <div class="radar-chart-container">
+                <div class="chart-wrapper">
+                  <canvas id="radarChartVision"></canvas>
+                </div>
+              </div>
+
+              <!-- Right: Model Selector Only -->
+              <div class="comparison-container">
+                <div class="model-selector" id="selectorVision">
+                  <button class="model-btn active" data-model="gpt5">GPT-5</button>
+                  <button class="model-btn" data-model="gemini">Gemini 2.5 Pro</button>
+                  <button class="model-btn" data-model="claude">Claude-4 Sonnet</button>
+                  <button class="model-btn" data-model="glm">GLM-4.5V</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <!-- SECTION 2: TEXT-BASED WORLD -->
+          <div class="world-section">
+            <h4 class="world-title">Text-based World Performance</h4>
+            <p class="world-caption">Performance metrics across 8 spatial tasks in the Text-based environment. Includes InternVL-3.5 evaluation.</p>
+            
+            <div class="visualization-container">
+              <!-- Left: Radar Chart -->
+              <div class="radar-chart-container">
+                <div class="chart-wrapper">
+                  <canvas id="radarChartText"></canvas>
+                </div>
+              </div>
+
+              <!-- Right: Model Selector Only -->
+              <div class="comparison-container">
+                <div class="model-selector" id="selectorText">
+                  <button class="model-btn active" data-model="gpt5">GPT-5</button>
+                  <button class="model-btn" data-model="gemini">Gemini 2.5 Pro</button>
+                  <button class="model-btn" data-model="claude">Claude-4 Sonnet</button>
+                  <button class="model-btn" data-model="glm">GLM-4.5V</button>
+                  <button class="model-btn" data-model="internvl">InternVL-3.5</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div> 
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  #results .section-container {
+    max-width: 1400px;
+  }
+
+  .findings-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+  }
+
+  .finding-category {
+    background-color: #fff;
+    border-radius: 16px;
+    padding: 2.5rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    border-left: 5px solid #1976d2;
+  }
+
+  .category-title {
+    color: #2a2f6c;
+    font-size: 1.6rem;
+    margin-bottom: 2rem;
+    border-bottom: 3px solid #2a2f6c;
+    padding-bottom: 0.75rem;
+    font-weight: 700;
+  }
+
+  .takeaways-box {
+    background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    border: 2px solid #2196f3;
+  }
+
+  .takeaway-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .takeaway-header h4 {
+    color: #1565c0;
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+
+  .bulb-icon {
+    font-size: 1.2rem;
+  }
+
+  .takeaway-list {
+    margin: 0;
+    padding-left: 1.5rem;
+    list-style-type: disc;
+  }
+
+  .takeaway-list li {
+    color: #1565c0;
+    margin-bottom: 0.5rem;
+    line-height: 1.6;
+  }
+
+  /* World Section Styling */
+  .world-section {
+    margin-bottom: 2rem;
+  }
+
+  .world-title {
+    font-size: 1.4rem;
+    color: #2a2f6c;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+    border-left: 4px solid #2a2f6c;
+    padding-left: 1rem;
+  }
+
+  .world-caption {
+    font-size: 0.95rem;
+    color: #666;
+    margin-bottom: 1.5rem;
+    padding-left: 1rem;
+    font-style: italic;
+  }
+
+  .divider {
+    height: 2px;
+    background: #eee;
+    margin: 3rem 0;
+  }
+
+  /* Visualization Container */
+  .visualization-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+
+  .radar-chart-container,
+  .comparison-container {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e9ecef;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .chart-wrapper {
+    position: relative;
+    height: 380px;
+    flex: 1;
+  }
+
+  .chart-wrapper canvas {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Model Selector Buttons */
+  .model-selector {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-bottom: 1.5rem;
+    justify-content: center;
+  }
+  
+  .model-btn {
+    flex: 1 0 auto; /* Allow grow and shrink, auto basis */
+    min-width: 100px; /* Minimum width */
+    max-width: 180px; /* Maximum width to prevent super wide buttons */
+    padding: 0.6rem 0.8rem;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border: 2px solid #dee2e6;
+    border-radius: 8px;
+    color: #495057;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: Georgia, serif;
+    text-align: center;
+  }
+
+  .model-btn:hover {
+    background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
+    border-color: #1976d2;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(25, 118, 210, 0.2);
+  }
+
+  .model-btn.active {
+    background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+    border-color: #1565c0;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3);
+  }
+
+  @media (max-width: 1024px) {
+    .visualization-container {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .chart-wrapper {
+      height: 300px;
+    }
+    .model-btn {
+      flex: 1 1 45%; /* 2 per row on mobile */
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', async () => {
+    const { Chart, registerables } = await import('chart.js');
+    Chart.register(...registerables);
+
+    // TASK LABELS (8 tasks)
+    // Active: direction, act2view, view2act
+    // Passive: alloc.map, ment.rot, loc2view, rot.dir, view2loc
+    const taskLabels = [
+      'Direction', 'Act2View', 'View2Act', 
+      'Alloc.Map', 'Ment.Rot', 'Loc2View', 'Rot.Dir', 'View2Loc'
+    ];
+
+    // Data Structure: 8 values per model per world
+    // Extracted from Table 1 & 2 data provided earlier
+    const worldData = {
+      vision: {
+        gpt5: { 
+          name: 'GPT-5', 
+          // Act[3], Pas[5] -> Combined 8
+          data: [43, 58, 49, 48, 77, 68, 84, 48], 
+          color: 'rgba(54, 162, 235, 0.8)', borderColor: '#36A2EB' 
+        },
+        gemini: { 
+          name: 'Gemini 2.5 Pro', 
+          data: [49, 52, 59, 48, 71, 64, 93, 57], 
+          color: 'rgba(75, 192, 192, 0.8)', borderColor: '#4BC0C0' 
+        },
+        claude: { 
+          name: 'Claude-4 Sonnet', 
+          data: [27, 34, 34, 35, 31, 47, 53, 18], 
+          color: 'rgba(153, 102, 255, 0.8)', borderColor: '#9966FF' 
+        },
+        glm: { 
+          name: 'GLM-4.5V', 
+          data: [25, 29, 37, 34, 21, 44, 47, 22], 
+          color: 'rgba(255, 159, 64, 0.8)', borderColor: '#FF9F40' 
+        }
+      },
+      text: {
+        gpt5: { 
+          name: 'GPT-5', 
+          data: [73, 83, 70, 93, 90, 85, 91, 86], 
+          color: 'rgba(54, 162, 235, 0.8)', borderColor: '#36A2EB'
+        },
+        gemini: { 
+          name: 'Gemini 2.5 Pro', 
+          data: [67, 71, 71, 83, 79, 67, 93, 68], 
+          color: 'rgba(75, 192, 192, 0.8)', borderColor: '#4BC0C0'
+        },
+        claude: { 
+          name: 'Claude-4 Sonnet', 
+          data: [27, 47, 35, 44, 33, 59, 61, 19], 
+          color: 'rgba(153, 102, 255, 0.8)', borderColor: '#9966FF'
+        },
+        glm: { 
+          name: 'GLM-4.5V', 
+          data: [28, 32, 31, 33, 29, 40, 57, 25], 
+          color: 'rgba(255, 159, 64, 0.8)', borderColor: '#FF9F40'
+        },
+        internvl: { 
+          name: 'InternVL-3.5', 
+          data: [35, 37, 32, 43, 43, 40, 62, 7], 
+          color: 'rgba(255, 205, 86, 0.8)', borderColor: '#FFCD56' 
+        }
+      }
+    };
+
+    // State for selections
+    let visionModelKey = 'gpt5';
+    let textModelKey = 'gpt5';
+
+    // Chart Instances
+    let radarVision: any = null;
+    let radarText: any = null;
+
+    // Initialize
+    initVisionCharts();
+    initTextCharts();
+
+    // Event Listeners - Vision Selector
+    const visBtns = document.querySelectorAll('#selectorVision .model-btn');
+    visBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const model = btn.getAttribute('data-model');
+        if (model && model in worldData.vision) {
+          visionModelKey = model;
+          // Update UI
+          visBtns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          // Update Charts
+          updateVisionCharts();
+        }
+      });
+    });
+
+    // Event Listeners - Text Selector
+    const txtBtns = document.querySelectorAll('#selectorText .model-btn');
+    txtBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const model = btn.getAttribute('data-model');
+        if (model && model in worldData.text) {
+          textModelKey = model;
+          // Update UI
+          txtBtns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          // Update Charts
+          updateTextCharts();
+        }
+      });
+    });
+
+    // --- VISION CHARTS ---
+    function initVisionCharts() {
+      // Radar
+      const ctxR = document.getElementById('radarChartVision') as HTMLCanvasElement;
+      if (ctxR) {
+        radarVision = new Chart(ctxR, {
+          type: 'radar',
+          data: getRadarData('vision', visionModelKey),
+          options: getRadarOptions()
+        });
+      }
+    }
+
+    function updateVisionCharts() {
+      if (radarVision) {
+        radarVision.data = getRadarData('vision', visionModelKey);
+        radarVision.update();
+      }
+    }
+
+    // --- TEXT CHARTS ---
+    function initTextCharts() {
+      // Radar
+      const ctxR = document.getElementById('radarChartText') as HTMLCanvasElement;
+      if (ctxR) {
+        radarText = new Chart(ctxR, {
+          type: 'radar',
+          data: getRadarData('text', textModelKey),
+          options: getRadarOptions()
+        });
+      }
+    }
+
+    function updateTextCharts() {
+      if (radarText) {
+        radarText.data = getRadarData('text', textModelKey);
+        radarText.update();
+      }
+    }
+
+    // --- HELPERS ---
+    function getRadarData(world: 'vision' | 'text', activeKey: string) {
+      const dataSet = worldData[world];
+      const model = dataSet[activeKey as keyof typeof dataSet];
+
+      return { 
+        labels: taskLabels, 
+        datasets: [
+          {
+            label: model.name,
+            data: model.data,
+            backgroundColor: model.color.replace('0.8', '0.1'),
+            borderColor: model.borderColor,
+            borderWidth: 3,
+            pointRadius: 4
+          }
+        ] 
+      };
+    }
+
+    function getRadarOptions() {
+      return {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'bottom', labels: { boxWidth: 12 } }
+        },
+        scales: { r: { beginAtZero: true, max: 100, ticks: { display: false } } }
+      };
+    }
+
+  });
+</script> 
