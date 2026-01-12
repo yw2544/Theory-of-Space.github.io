@@ -4,7 +4,6 @@ import Hero from '../components/Hero.astro';
 import Algorithm from '../components/Algorithm.astro';
 // import ChartsSection from '../components/ChartsSection.astro';
 import FindingsSection from '../components/FindingsSection.astro';
-import DatasetViewer from '../components/DatasetViewer.astro';
 import AuthorsCitation from '../components/AuthorsCitation.astro';
 
 // Import component-specific styles
@@ -12,7 +11,6 @@ import '../styles/section.css';
 import '../styles/hero.css';
 import '../styles/authors.css';
 import '../styles/resources.css';
-import '../styles/datasetViewer.css';
 
 const pageTitle = "Theory of Space";
 ---
@@ -20,10 +18,7 @@ const pageTitle = "Theory of Space";
   <!-- 1. Teaser Section -->
   <Hero />
   
-  <!-- 2. Dataset Viewer Section -->
-  <DatasetViewer />
-  
-  <!-- 3. Leaderboard Section -->
+  <!-- 2. Leaderboard Section -->
   <Algorithm />
   
   <!-- 4. Key Findings Section -->
@@ -34,7 +29,6 @@ const pageTitle = "Theory of Space";
 </Layout>
 
 <script>
-  import { initDatasetViewer } from '../scripts/datasetViewer';
   import { initCitationCopy } from '../scripts/citation';
 
   document.addEventListener('DOMContentLoaded', () => {
@@ -43,9 +37,6 @@ const pageTitle = "Theory of Space";
     
     // Initialize trajectory viewer - Hidden but preserved
     // initTrajectoryViewer();
-    
-    // Initialize dataset viewer
-    // initDatasetViewer();
 
     // Text animation for hero section
     const animateTitle = () => {

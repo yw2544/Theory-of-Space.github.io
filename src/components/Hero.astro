@@ -74,53 +74,147 @@ const assetPath = (path: string) => `${normalizedBase}${path.replace(/^\//, '')}
     </div>
   </div>
 
+  <!-- Video Section -->
+  <div class="video-section">
+    <div class="video-wrapper">
+      <!-- 
+        Usage:
+        1. Local video file: Place video file in public/ directory, then specify path in src, e.g.:
+           <video src={assetPath('videos/intro.mp4')} controls class="video-player"></video>
+        
+        2. External video link (YouTube, etc.): Use iframe, e.g.:
+           <iframe src="https://www.youtube.com/embed/VIDEO_ID" frameborder="0" allowfullscreen class="video-player"></iframe>
+        
+        3. Currently displaying placeholder, uncomment and replace the code above to use video
+      -->
+      <div class="video-placeholder">
+        <div class="video-placeholder-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+          </svg>
+        </div>
+        <p class="video-placeholder-text">Video Placeholder - Please add video file or video link</p>
+      </div>
+      <!-- 
+        Uncomment the code below and modify the path/link to use video:
+        <video src={assetPath('videos/intro.mp4')} controls class="video-player"></video>
+        Or use iframe:
+        <iframe src="YOUR_VIDEO_URL" frameborder="0" allowfullscreen class="video-player"></iframe>
+      -->
+    </div>
+  </div>
+
   <div class="hero-qa">
     <div class="qa-item">
       <h3 class="qa-question">Why Theory of Space?</h3>
       <p class="qa-answer">
-        Existing evaluations of foundation models predominantly measure passive spatial reasoning: models infer relations or answer questions from fixed observations, curated views, or pre-collected trajectories. This leaves a critical gap for embodied intelligence, where perception is inherently partial and useful spatial knowledge must be built through self-directed exploration. An agent must decide what to observe next to reduce uncertainty, integrate egocentric observations over time, and maintain a globally consistent spatial belief about both seen and unseen structure. Theory of Space is needed to evaluate this missing capability directly. We provide an evaluation paradigm that isolates exploration from reasoning, measures belief utilization and exploration efficiency, and probes the model’s internal spatial belief and uncertainty—going beyond downstream task accuracy to diagnose where spatial belief construction fails.
+        Most evaluations of foundation models measure passive spatial reasoning from fixed observations or scripted trajectories. This misses a core requirement of embodied intelligence. Under partial observability, an agent must decide what to observe next to reduce uncertainty and build a globally consistent spatial belief. Theory of Space fills this gap by evaluating spatial belief construction as an active loop of exploration, belief formation, and belief utilization, rather than only downstream answers.
       </p>
+      <div class="qa-figure">
+        <div class="qa-image-wrapper">
+          <img
+            src={assetPath('images/tos_first.png')}
+            alt="Theory of Space: active exploration, probed belief, and evaluation"
+            class="qa-image"
+            loading="lazy"
+          />
+        </div>
+        <p class="qa-caption">THEORY OF SPACE: active exploration, probed belief, and evaluation.</p>
+      </div>
     </div>
     <div class="qa-item">
       <h3 class="qa-question">What is the challenge:</h3>
       <p class="qa-answer">
-        The core challenge is that embodied spatial intelligence requires active decision-making under partial observability, not merely processing more observations. An agent must identify what is unknown in its current belief, choose actions that maximize information gain, and know when to stop exploring once uncertainty is sufficiently reduced. This demands integrating egocentric, sequential views into a globally consistent spatial belief about both seen and unseen structure, and updating that belief when the environment changes outside the agent’s view. Naive strategies such as random wandering or exhaustive sweeping are inefficient and often fail to resolve ambiguity. The challenge is amplified in vision: small perceptual errors can cascade into global inconsistencies and unstable beliefs, making reliable belief construction and uncertainty management difficult beyond downstream task accuracy.
+        The challenge is active decision-making under partial observability. The agent must decide what to observe next to reduce uncertainty and integrate egocentric observations into a globally consistent spatial belief.
       </p>
+      <div class="qa-figure">
+        <div class="qa-image-wrapper">
+          <img
+            src={assetPath('active_exploration_example.png')}
+            alt="Active exploration under partial observability"
+            class="qa-image"
+            loading="lazy"
+          />
+        </div>
+        <p class="qa-caption">Active exploration under partial observability: belief is built by choosing informative views to reduce uncertainty.</p>
+      </div>
+      <p class="qa-answer">
+        This requires the agent to:
+      </p>
+      <ul class="qa-list">
+        <li>Identify what is unknown in the current belief</li>
+        <li>Choose actions that reduce uncertainty efficiently</li>
+        <li>Stop when uncertainty is sufficiently reduced</li>
+      </ul>
     </div>
     <div class="qa-item">
       <h3 class="qa-question">What do we do?</h3>
       <p class="qa-answer">
-        We introduce Theory of Space, an evaluation paradigm that tests whether foundation models can construct, update, and utilize spatial beliefs through active perception under partial observability, in both text-based and vision-based environments. Specifically:
+        We implement Theory of Space in parallel text-based and vision-based environments under partial observability, allowing controlled comparisons across modalities.
       </p>
-      <h4 class="qa-subtitle">Belief utilization via a full spatial task suite.</h4>
-      <ul class="qa-list">
-        <li>Route-level (egocentric, path-based) belief: PAIRWISE RELATION (DIR), PERSPECTIVE TAKING (PT), ACTION-TO-VIEW (A2V), PERSPECTIVE DECISION (PD), and VIEW-TO-ACTION (V2A).</li>
-        <li>Survey-level (allocentric, map-like) belief: ALLOCENTRIC MAPPING (AM), MENTAL ROTATION (MR), LOCATION2VIEW (L2V), and VIEW2LOCATION (V2L).</li>
-        <li>Belief Updating: FALSE BELIEF (FB) under covert environment changes.</li>
-      </ul>
-      <h4 class="qa-subtitle">Active–passive protocols to disentangle exploration from reasoning.</h4>
-      <ul class="qa-list">
-        <li>Active agents choose actions (move/rotate/observe/terminate) to reduce uncertainty.</li>
-        <li>Passive comprehension agents reason from standardized logs generated by scripted proxy explorers, isolating exploration strategy from belief inference.</li>
-      </ul>
-      <h4 class="qa-subtitle">Direct probing of internal belief and uncertainty beyond answer accuracy.</h4>
-      <ul class="qa-list">
-        <li>Models externalize a structured cognitive map and uncertainty over unobserved structure.</li>
-        <li>We evaluate exploration efficiency (information gain / uncertainty reduction per step) and belief quality (consistency and stability), enabling diagnostic analysis beyond downstream task scores.</li>
-      </ul>
+      
+      <!-- Block 1: Task Suite -->
+      <div class="qa-block">
+        <div class="qa-block-content">
+          <ul class="qa-block-list">
+            <li>We design a spatial task suite to evaluate belief utilization at two levels: route-level (egocentric) and survey-level (allocentric). Additionally, we include belief updating via False Belief under covert environment changes.</li>
+          </ul>
+          <div class="qa-figure">
+            <div class="qa-image-wrapper">
+              <img
+                src={assetPath('tos_eval.png')}
+                alt="Task suite for Theory of Space"
+                class="qa-image"
+                loading="lazy"
+              />
+            </div>
+            <p class="qa-caption">Task suite for Theory of Space covering route-level egocentric belief and survey-level allocentric belief.</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Block 2: Active-Passive Protocols -->
+      <div class="qa-block">
+        <div class="qa-block-content">
+          <ul class="qa-block-list">
+            <li>We evaluate models under two complementary protocols:</li>
+          </ul>
+          <div class="qa-protocols-grid">
+            <div class="qa-protocol-item">
+              <h4 class="qa-protocol-title">Active Exploration</h4>
+              <p class="qa-protocol-description">Where the agent autonomously selects actions to gather informative observations under partial observability.</p>
+            </div>
+            <div class="qa-protocol-item">
+              <h4 class="qa-protocol-title">Passive Comprehension</h4>
+              <p class="qa-protocol-description">Where the model reasons from standardized observation logs generated by scripted proxy explorers to disentangle exploration strategy from spatial reasoning.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Block 3: Probing Internal Belief -->
+      <div class="qa-block">
+        <div class="qa-block-content">
+          <ul class="qa-block-list">
+            <li>Beyond downstream accuracy, we explicitly probe the model's internal spatial belief by requiring it to externalize a cognitive map and uncertainty at each step. The belief map is generated from the exploration history and updated as new observations arrive, enabling direct evaluation of belief quality and diagnostic analysis beyond final answers.</li>
+          </ul>
+          <div class="qa-figure">
+            <div class="qa-image-wrapper">
+              <img
+                src={assetPath('tos_exp.png')}
+                alt="Probing internal spatial belief"
+                class="qa-image"
+                loading="lazy"
+              />
+            </div>
+            <p class="qa-caption">Exploration history is converted into a probed cognitive map and updated over time.</p>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
-  <div class="teaser-figure">
-    <div class="teaser-image-wrapper">
-      <img
-        src={assetPath('images/tos_first.png')}
-        alt="Theory of Space Overview"
-        class="teaser-image"
-        loading="lazy"
-      />
-    </div>
-  </div>
+  
 
 </section> 
 
@@ -241,5 +335,214 @@ const assetPath = (path: string) => `${normalizedBase}${path.replace(/^\//, '')}
   .vagen-announcement:hover {
     color: #4b4f8f;
     text-decoration: none;
+  }
+
+  /* Video Section Styles */
+  .video-section {
+    margin-top: 3rem;
+    margin-bottom: 4rem;
+  }
+
+  .video-wrapper {
+    max-width: 1000px;
+    margin: 0 auto;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 18px 45px rgba(15, 23, 42, 0.18);
+    border: 1px solid #e2e8f0;
+    background: #fff;
+  }
+
+  .video-player {
+    width: 100%;
+    height: auto;
+    display: block;
+    aspect-ratio: 16 / 9;
+    border: none;
+  }
+
+  .video-placeholder {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 2px dashed #ced4da;
+    color: #6c757d;
+    min-height: 400px;
+  }
+
+  .video-placeholder-icon {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 1.5rem;
+    color: #adb5bd;
+    opacity: 0.6;
+  }
+
+  .video-placeholder-icon svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .video-placeholder-text {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #6c757d;
+    text-align: center;
+    margin: 0;
+  }
+
+  @media (max-width: 768px) {
+    .video-section {
+      margin-top: 2rem;
+      margin-bottom: 3rem;
+    }
+
+    .video-placeholder {
+      min-height: 300px;
+    }
+
+    .video-placeholder-icon {
+      width: 60px;
+      height: 60px;
+      margin-bottom: 1rem;
+    }
+
+    .video-placeholder-text {
+      font-size: 0.95rem;
+      padding: 0 1rem;
+    }
+  }
+
+  /* QA Block Styles */
+  .qa-block {
+    margin-bottom: 0rem;
+  }
+
+  .qa-block:last-child {
+    margin-bottom: 0;
+  }
+
+  .qa-block-content {
+    padding: 2rem;
+  }
+
+  .qa-block-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.5rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .qa-block-list li {
+    position: relative;
+    padding-left: 1.5rem;
+    color: #2e2e2e;
+    line-height: 1.7;
+    font-size: 1.2rem;
+  }
+
+  .qa-block-list li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: #2a2f6c;
+    font-weight: bold;
+    font-size: 1.2rem;
+  }
+
+  .qa-block .qa-figure {
+    margin-top: 1.5rem;
+  }
+
+  /* QA Protocols Grid */
+  .qa-protocols-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-top: 1.5rem;
+  }
+
+  .qa-protocol-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    background: #fff;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    border: 1px solid #e2e8f0;
+  }
+
+  .qa-protocol-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #1565c0;
+    margin: 0;
+  }
+
+  .qa-protocol-description {
+    font-size: 1.05rem;
+    color: #2e2e2e;
+    line-height: 1.7;
+    margin: 0;
+  }
+
+  @media (max-width: 768px) {
+    .qa-protocols-grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+  }
+
+  /* QA Figure Styles */
+  .qa-figure {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .qa-image-wrapper {
+    width: 80%;
+    max-width: 800px;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 18px 45px rgba(15, 23, 42, 0.18);
+    border: 1px solid #e2e8f0;
+    background: #fff;
+    margin: 0 auto;
+  }
+
+  .qa-image {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .qa-caption {
+    font-size: 0.9rem;
+    color: #9ca3af;
+    text-align: center;
+    margin: 0;
+    font-style: italic;
+    line-height: 1.5;
+  }
+
+  @media (max-width: 768px) {
+    .qa-figure {
+      margin-top: 1.5rem;
+    }
+
+    .qa-caption {
+      font-size: 0.85rem;
+      padding: 0 1rem;
+    }
   }
 </style> 

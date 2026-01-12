@@ -263,9 +263,9 @@ pre.cogmap-content::-webkit-scrollbar-thumb:hover {
   -ms-user-select: text;
 }
 
-/* Dataset Viewer - 新设计样式 - 使用具体选择器避免冲突 */
+/* Dataset Viewer - New design styles - Use specific selectors to avoid conflicts */
 
-/* 主要容器 - 只针对dataset-section */
+/* Main container - Only for dataset-section */
 #dataset-viewer.dataset-section {
   padding: 4rem 0;
   background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
@@ -457,7 +457,7 @@ pre.cogmap-content::-webkit-scrollbar-thumb:hover {
   gap: 1.5rem;
 }
 
-/* 内容卡片 */
+/* Content cards */
 #dataset-viewer .content-card {
   background: #f8fafc;
   border-radius: 12px;
@@ -504,7 +504,7 @@ pre.cogmap-content::-webkit-scrollbar-thumb:hover {
   line-height: 1.6;
 }
 
-/* 图片容器 - 调整大小 */
+/* Image container - Adjust size */
 #dataset-viewer .images-card {
   min-height: 200px;
 }
@@ -966,7 +966,7 @@ pre.cogmap-content::-webkit-scrollbar-thumb:hover {
   text-decoration: none;
 }
 
-/* 响应式设计 */
+/* Responsive design */
 @media (max-width: 1200px) {
   #dataset-viewer .controls-panel {
     grid-template-columns: 1fr 1fr;
