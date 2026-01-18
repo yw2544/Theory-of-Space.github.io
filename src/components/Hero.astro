@@ -7,6 +7,7 @@ const assetPath = (path: string) => `${normalizedBase}${path.replace(/^\//, '')}
 <section id="hero" class="content-section hero-section">
   <div class="title-wrapper">
     <div class="title-with-logo">
+      <img src={assetPath('icon.png')} alt="Theory of Space Logo" class="title-logo" />
       <h5 class="main-title" id="animated-title">
         <span class="title-line">Theory of Space</span>
       </h5>
@@ -107,8 +108,9 @@ const assetPath = (path: string) => `${normalizedBase}${path.replace(/^\//, '')}
   <div class="hero-qa">
     <!-- Theory of Space Definition Section -->
     <div class="qa-item">
+      <h3 class="qa-question">What is Theory of Space?</h3>
       <p class="qa-answer">
-        Theory of Space is an agent's ability to actively construct, update, and utilize a globally consistent spatial belief under partial observability. It requires integrating partial observations through self-directed exploration, revising belief when new evidence conflicts with prior belief, and using the current belief to support spatial tasks and guide future exploration.
+        Theory of Space is an agent's ability to actively construct, update, and utilize a globally consistent spatial belief under partial observability. It requires integrating partial observations through self-directed exploration, revising belief when new evidence conflicts with prior belief, and using the current belief to support spatial tasks and guide future exploration. We evaluate Theory of Space as an active loop of exploration, belief construction, and belief utilization.
       </p>
       <div class="qa-figure">
         <div class="qa-image-wrapper">
@@ -121,19 +123,20 @@ const assetPath = (path: string) => `${normalizedBase}${path.replace(/^\//, '')}
         </div>
         <p class="qa-caption">Theory of Space decomposes into constructing, updating, and utilizing an internal spatial belief.</p>
       </div>
-      <p class="qa-answer" style="margin-top: 1.5rem; margin-bottom: 1.5rem;">
-        We evaluate Theory of Space as an active loop of exploration, belief construction, and belief utilization.
+
+      <p class="qa-answer">
+        To operationalize this definition, we view Theory of Space as maintaining an internal spatial belief that is not directly observed. The agent actively explores to collect partial observations, and the model must integrate this exploration history into a coherent spatial belief that supports downstream spatial reasoning and guides future exploration.
       </p>
       <div class="qa-figure">
         <div class="qa-image-wrapper">
           <img
-            src={assetPath('tos_first.png')}
-            alt="Theory of Space: active exploration, probed belief, and evaluation"
+            src={assetPath('explore_belief.png')}
+            alt="Theory of Space as a hidden space"
             class="qa-image"
             loading="lazy"
           />
         </div>
-        <p class="qa-caption">THEORY OF SPACE: active exploration, probed belief, and evaluation.</p>
+        <p class="qa-caption">Theory of Space as a hidden space: active exploration provides partial observations, which are integrated into an internal spatial belief.</p>
       </div>
     </div>
 
@@ -170,70 +173,86 @@ const assetPath = (path: string) => `${normalizedBase}${path.replace(/^\//, '')}
       </p>
     </div>
     <div class="qa-item">
-      <h3 class="qa-question">What is the challenge:</h3>
+      <h3 class="qa-question">What is the challenge?</h3>
       <p class="qa-answer">
-        The challenge is active decision-making under partial observability. The agent must decide what to observe next to reduce uncertainty and integrate egocentric observations into a globally consistent spatial belief.
+        The challenge is active decision making under partial observability: the agent must decide what to observe next while building a globally consistent spatial belief.
       </p>
       <div class="qa-figure">
         <div class="qa-image-wrapper">
           <img
-            src={assetPath('active_exploration_example.png')}
+            src={assetPath('explore.jpg')}
             alt="Active exploration under partial observability"
             class="qa-image"
             loading="lazy"
           />
         </div>
-        <p class="qa-caption">Active exploration under partial observability: belief is built by choosing informative views to reduce uncertainty.</p>
+        <p class="qa-caption">Active exploration under partial observability requires choosing informative observations to reduce uncertainty.</p>
       </div>
       <p class="qa-answer">
         This requires the agent to:
       </p>
       <ul class="qa-list">
-        <li>Identify what is unknown in the current belief</li>
-        <li>Choose actions that reduce uncertainty efficiently</li>
-        <li>Stop when uncertainty is sufficiently reduced</li>
+        <li>Identify uncertainty in its current belief and target unresolved ambiguities.</li>
+        <li>Choose actions that efficiently reduce uncertainty, rather than merely increasing coverage.</li>
+        <li>Integrate egocentric observations over time into a coherent global belief, while remaining robust to perceptual noise in vision.</li>
       </ul>
     </div>
     <div class="qa-item">
       <h3 class="qa-question">What do we do?</h3>
       <p class="qa-answer">
-        We implement Theory of Space in parallel text-based and vision-based environments under partial observability, allowing controlled comparisons across modalities.
+        We implement Theory of Space in parallel text based and vision based environments under partial observability, enabling controlled cross modality comparisons.
       </p>
       
       <!-- Block 1: Task Suite -->
       <div class="qa-block">
         <div class="qa-block-content">
-          <ul class="qa-block-list">
-            <li>We design a spatial task suite to evaluate belief utilization at two levels: route-level (egocentric) and survey-level (allocentric). Additionally, we include belief updating via False Belief under covert environment changes.</li>
-          </ul>
+          <p class="qa-answer">
+            We design a spatial task suite to evaluate belief utilization at two complementary levels. Route level tasks test egocentric, path based reasoning over local observations, while survey level tasks test allocentric, map like reasoning that supports global layout understanding and viewpoint transformation.
+          </p>
           <div class="qa-figure">
             <div class="qa-image-wrapper">
               <img
-                src={assetPath('tos_eval.png')}
-                alt="Task suite for Theory of Space"
+                src={assetPath('route_knowledge.png')}
+                alt="Route Knowledge Tasks"
                 class="qa-image"
                 loading="lazy"
               />
             </div>
-            <p class="qa-caption">Task suite for Theory of Space covering route-level egocentric belief and survey-level allocentric belief.</p>
+            <p class="qa-caption">Route level tasks evaluate egocentric belief and path based spatial reasoning.</p>
           </div>
+          
+          <p class="qa-answer" style="margin-top: 1.5rem;">
+            To probe survey level belief, we evaluate whether a model can form and use an allocentric map, infer unseen views, and reason over geometric transformations beyond familiar paths.
+          </p>
+          <div class="qa-figure">
+            <div class="qa-image-wrapper">
+              <img
+                src={assetPath('survey_knowledge.png')}
+                alt="Survey Knowledge Tasks"
+                class="qa-image"
+                loading="lazy"
+              />
+            </div>
+            <p class="qa-caption">Survey level tasks evaluate allocentric belief through global mapping and viewpoint transformation.</p>
+          </div>
+
+          <p class="qa-answer" style="margin-top: 1.5rem;">
+            We additionally evaluate belief updating via False Belief under covert environment changes.
+          </p>
         </div>
       </div>
       
-      <!-- Block 2: Active-Passive Protocols -->
+      <!-- Block 2: Protocols -->
       <div class="qa-block">
         <div class="qa-block-content">
-          <ul class="qa-block-list">
-            <li>We evaluate models under two complementary protocols:</li>
-          </ul>
           <div class="qa-protocols-grid">
             <div class="qa-protocol-item">
               <h4 class="qa-protocol-title">Active Exploration</h4>
-              <p class="qa-protocol-description">Where the agent autonomously selects actions to gather informative observations under partial observability.</p>
+              <p class="qa-protocol-description">The agent autonomously selects actions to gather informative observations under partial observability.</p>
             </div>
             <div class="qa-protocol-item">
               <h4 class="qa-protocol-title">Passive Comprehension</h4>
-              <p class="qa-protocol-description">Where the model reasons from standardized observation logs generated by scripted proxy explorers to disentangle exploration strategy from spatial reasoning.</p>
+              <p class="qa-protocol-description">The model reasons from standardized observation logs generated by scripted proxy explorers, decoupling exploration strategy from belief inference.</p>
             </div>
           </div>
         </div>
@@ -242,22 +261,26 @@ const assetPath = (path: string) => `${normalizedBase}${path.replace(/^\//, '')}
       <!-- Block 3: Probing Internal Belief -->
       <div class="qa-block">
         <div class="qa-block-content">
-          <ul class="qa-block-list">
-            <li>Beyond downstream accuracy, we explicitly probe the model's internal spatial belief by requiring it to externalize a cognitive map and uncertainty at each step. The belief map is generated from the exploration history and updated as new observations arrive, enabling direct evaluation of belief quality and diagnostic analysis beyond final answers.</li>
-          </ul>
+          <p class="qa-answer">
+            Beyond downstream accuracy, we explicitly probe internal spatial belief by requiring the model to externalize a cognitive map and uncertainty during exploration. This shifts evaluation from only final answers to the belief construction process itself, enabling direct assessment of belief quality and failure diagnosis, such as inconsistencies across local and global structure or unstable updates over time.
+          </p>
           <div class="qa-figure">
             <div class="qa-image-wrapper">
               <img
-                src={assetPath('tos_exp.png')}
-                alt="Probing internal spatial belief"
+                src={assetPath('belief.jpg')}
+                alt="Probing spatial belief"
                 class="qa-image"
                 loading="lazy"
               />
             </div>
-            <p class="qa-caption">Exploration history is converted into a probed cognitive map and updated over time.</p>
+            <p class="qa-caption">Probing spatial belief by externalizing a cognitive map from the exploration history.</p>
           </div>
         </div>
       </div>
+
+      <p class="qa-answer" style="margin-top: 2rem; font-weight: 500; text-align: center; border-top: 1px solid #e2e8f0; padding-top: 2rem;">
+        Together, Theory of Space evaluates whether foundation models can construct, update, and utilize spatial belief through active perception, while isolating exploration from reasoning and directly probing internal belief beyond task scores.
+      </p>
     </div>
   </div>
 
