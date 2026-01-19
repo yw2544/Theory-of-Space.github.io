@@ -209,36 +209,29 @@ const assetPath = (path: string) => `${normalizedBase}${path.replace(/^\//, '')}
           <p class="qa-answer">
             We design a spatial task suite to evaluate belief utilization at two complementary levels. Route level tasks test egocentric, path based reasoning over local observations, while survey level tasks test allocentric, map like reasoning that supports global layout understanding and viewpoint transformation.
           </p>
-          <div class="qa-figure">
-            <div class="qa-image-wrapper">
-              <img
-                src={assetPath('route_knowledge.png')}
-                alt="Route Knowledge Tasks"
-                class="qa-image"
-                loading="lazy"
-              />
-            </div>
-            <p class="qa-caption">Route level tasks evaluate egocentric belief and path based spatial reasoning.</p>
-          </div>
-          
           <p class="qa-answer" style="margin-top: 1.5rem;">
             To probe survey level belief, we evaluate whether a model can form and use an allocentric map, infer unseen views, and reason over geometric transformations beyond familiar paths.
           </p>
-          <div class="qa-figure">
+          <p class="qa-answer" style="margin-top: 1rem;">
+            Route level tasks evaluate egocentric belief and path based spatial reasoning.
+          </p>
+          <p class="qa-answer" style="margin-top: 0.75rem;">
+            Survey level tasks evaluate allocentric belief through global mapping and viewpoint transformation.
+          </p>
+          <p class="qa-answer" style="margin-top: 1.5rem; margin-bottom: 0;">
+            We additionally evaluate belief updating via False Belief under covert environment changes.
+          </p>
+          <div class="qa-figure" style="margin-top: 1.5rem;">
             <div class="qa-image-wrapper">
               <img
-                src={assetPath('survey_knowledge.png')}
-                alt="Survey Knowledge Tasks"
+                src={assetPath('tos_eval.png')}
+                alt="Task suite for Theory of Space"
                 class="qa-image"
                 loading="lazy"
               />
             </div>
-            <p class="qa-caption">Survey level tasks evaluate allocentric belief through global mapping and viewpoint transformation.</p>
+            <p class="qa-caption">Task suite for Theory of Space covering route-level and survey-level belief.</p>
           </div>
-
-          <p class="qa-answer" style="margin-top: 1.5rem; margin-bottom: 0;">
-            We additionally evaluate belief updating via False Belief under covert environment changes.
-          </p>
         </div>
       </div>
       
@@ -267,13 +260,13 @@ const assetPath = (path: string) => `${normalizedBase}${path.replace(/^\//, '')}
           <div class="qa-figure" style="margin-top: 2.5rem;">
             <div class="qa-image-wrapper">
               <img
-                src={assetPath('belief.jpg')}
-                alt="Probing spatial belief"
+                src={assetPath('spatial_belief.png')}
+                alt="Spatial belief probing"
                 class="qa-image"
                 loading="lazy"
               />
             </div>
-            <p class="qa-caption">Probing spatial belief by externalizing a cognitive map from the exploration history.</p>
+            <p class="qa-caption">Spatial belief probing: externalize a cognitive map from exploration history and identify unexplored regions.</p>
           </div>
         </div>
       </div>
