@@ -1,3 +1,9 @@
+.tos-text {
+    font-family: "Palatino", "Georgia", "Times New Roman", serif;
+    font-style: italic;
+    font-weight: bold;
+}
+
 :root {
     --page-max-width: 1100px;
     --header-height: 60px;

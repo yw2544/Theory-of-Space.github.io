@@ -9,7 +9,7 @@ const assetPath = (path: string) => `${normalizedBase}${path.replace(/^\//, '')}
     <div class="title-with-logo">
       <img src={assetPath('icon.png')} alt="Theory of Space Logo" class="title-logo" />
       <h5 class="main-title" id="animated-title">
-        <span class="title-line">Theory of Space</span>
+        <span class="title-line tos-text">Theory of Space</span>
       </h5>
     </div>
   </div>
@@ -108,9 +108,9 @@ const assetPath = (path: string) => `${normalizedBase}${path.replace(/^\//, '')}
   <div class="hero-qa">
     <!-- Theory of Space Definition Section -->
     <div class="qa-item">
-      <h3 class="qa-question">What is Theory of Space?</h3>
+      <h3 class="qa-question">What is <span class="tos-text">Theory of Space</span>?</h3>
       <p class="qa-answer">
-        Theory of Space is an agent's ability to actively construct, update, and utilize a globally consistent spatial belief under partial observability. It requires integrating partial observations through self-directed exploration, revising belief when new evidence conflicts with prior belief, and using the current belief to support spatial tasks and guide future exploration. We evaluate Theory of Space as an active loop of exploration, belief construction, and belief utilization.
+        <span class="tos-text">Theory of Space</span> is an agent's ability to actively construct, update, and utilize a globally consistent spatial belief under partial observability. It requires integrating partial observations through self-directed exploration, revising belief when new evidence conflicts with prior belief, and using the current belief to support spatial tasks and guide future exploration. We evaluate <span class="tos-text">Theory of Space</span> as an active loop of exploration, belief construction, and belief utilization.
       </p>
       <div class="qa-figure">
         <div class="qa-image-wrapper">
@@ -121,30 +121,19 @@ const assetPath = (path: string) => `${normalizedBase}${path.replace(/^\//, '')}
             loading="lazy"
           />
         </div>
-        <p class="qa-caption">Theory of Space decomposes into constructing, updating, and utilizing an internal spatial belief.</p>
+        <p class="qa-caption"><span class="tos-text">Theory of Space</span> decomposes into constructing, updating, and utilizing an internal spatial belief.</p>
       </div>
 
       <p class="qa-answer">
-        To operationalize this definition, we view Theory of Space as maintaining an internal spatial belief that is not directly observed. The agent actively explores to collect partial observations, and the model must integrate this exploration history into a coherent spatial belief that supports downstream spatial reasoning and guides future exploration.
+        To operationalize this definition, we view <span class="tos-text">Theory of Space</span> as maintaining an internal spatial belief that is not directly observed. The agent actively explores to collect partial observations, and the model must integrate this exploration history into a coherent spatial belief that supports downstream spatial reasoning and guides future exploration.
       </p>
-      <div class="qa-figure">
-        <div class="qa-image-wrapper">
-          <img
-            src={assetPath('explore_belief.png')}
-            alt="Theory of Space as a hidden space"
-            class="qa-image"
-            loading="lazy"
-          />
-        </div>
-        <p class="qa-caption">Theory of Space as a hidden space: active exploration provides partial observations, which are integrated into an internal spatial belief.</p>
-      </div>
     </div>
 
     <!-- Why Theory of Space Section -->
     <div class="qa-item">
-      <h3 class="qa-question">Why Theory of Space?</h3>
+      <h3 class="qa-question">Why <span class="tos-text">Theory of Space</span>?</h3>
       <p class="qa-answer">
-        Most evaluations of foundation models measure passive spatial reasoning from fixed observations or scripted trajectories. This setting does not test whether a model can build spatial belief when it must decide what to observe next under partial observability. Our results show a consistent passive to active gap across models in both text based and vision based environments. This gap motivates Theory of Space as a direct evaluation of active spatial belief construction beyond downstream answers.
+        Most evaluations of foundation models measure passive spatial reasoning from fixed observations or scripted trajectories. This setting does not test whether a model can build spatial belief when it must decide what to observe next under partial observability. Our results show a consistent passive to active gap across models in both text based and vision based environments. This gap motivates <span class="tos-text">Theory of Space</span> as a direct evaluation of active spatial belief construction beyond downstream answers.
       </p>
       <div class="qa-gap-figures">
         <div class="qa-gap-figure">
@@ -200,11 +189,15 @@ const assetPath = (path: string) => `${normalizedBase}${path.replace(/^\//, '')}
     <div class="qa-item">
       <h3 class="qa-question">What do we do?</h3>
       <p class="qa-answer">
-        We implement Theory of Space in parallel text based and vision based environments under partial observability, enabling controlled cross modality comparisons.
+        We implement <span class="tos-text">Theory of Space</span> in parallel text based and vision based environments under partial observability, enabling controlled cross modality comparisons.
       </p>
       
       <!-- Block 1: Task Suite -->
       <div class="qa-block">
+        <div class="qa-block-title">
+          <span class="qa-bullet">•</span>
+          <span class="qa-block-label">Task Suite</span>
+        </div>
         <div class="qa-block-content">
           <p class="qa-answer">
             We design a spatial task suite to evaluate belief utilization at two complementary levels. Route level tasks test egocentric, path based reasoning over local observations, while survey level tasks test allocentric, map like reasoning that supports global layout understanding and viewpoint transformation.
@@ -230,13 +223,17 @@ const assetPath = (path: string) => `${normalizedBase}${path.replace(/^\//, '')}
                 loading="lazy"
               />
             </div>
-            <p class="qa-caption">Task suite for Theory of Space covering route-level and survey-level belief.</p>
+            <p class="qa-caption">Task suite for <span class="tos-text">Theory of Space</span> covering route-level and survey-level belief.</p>
           </div>
         </div>
       </div>
       
       <!-- Block 2: Protocols -->
       <div class="qa-block" style="margin-top: -1rem;">
+        <div class="qa-block-title">
+          <span class="qa-bullet">•</span>
+          <span class="qa-block-label">Protocols</span>
+        </div>
         <div class="qa-block-content">
           <div class="qa-protocols-grid">
             <div class="qa-protocol-item">
@@ -253,6 +250,10 @@ const assetPath = (path: string) => `${normalizedBase}${path.replace(/^\//, '')}
       
       <!-- Block 3: Probing Internal Belief -->
       <div class="qa-block">
+        <div class="qa-block-title">
+          <span class="qa-bullet">•</span>
+          <span class="qa-block-label">Probing Internal Belief</span>
+        </div>
         <div class="qa-block-content">
           <p class="qa-answer">
             Beyond downstream accuracy, we explicitly probe internal spatial belief by requiring the model to externalize a cognitive map and uncertainty during exploration. This shifts evaluation from only final answers to the belief construction process itself, enabling direct assessment of belief quality and failure diagnosis, such as inconsistencies across local and global structure or unstable updates over time.
@@ -485,6 +486,26 @@ const assetPath = (path: string) => `${normalizedBase}${path.replace(/^\//, '')}
 
   .qa-block:last-child {
     margin-bottom: 0;
+  }
+
+  .qa-block-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1f2a60;
+    margin: 0 0 0.75rem 0;
+  }
+
+  .qa-bullet {
+    font-size: 1.2rem;
+    line-height: 1;
+    color: #2a2f6c;
+  }
+
+  .qa-block-label {
+    letter-spacing: 0.2px;
   }
 
   .qa-block-content {
