@@ -4,6 +4,7 @@ import Hero from '../components/Hero.astro';
 import Algorithm from '../components/Algorithm.astro';
 // import ChartsSection from '../components/ChartsSection.astro';
 import FindingsSection from '../components/FindingsSection.astro';
+import ActiveExplorationSession from '../components/ActiveExplorationSession.astro';
 import AuthorsCitation from '../components/AuthorsCitation.astro';
 
 // Import component-specific styles
@@ -11,6 +12,7 @@ import '../styles/section.css';
 import '../styles/hero.css';
 import '../styles/authors.css';
 import '../styles/resources.css';
+import '../styles/activeExploration.css';
 
 const pageTitle = "Theory of Space";
 ---
@@ -23,6 +25,9 @@ const pageTitle = "Theory of Space";
   
   <!-- 4. Key Findings Section -->
   <FindingsSection />
+
+  <!-- 4.5 Active Exploration Session -->
+  <ActiveExplorationSession />
   
   <!-- 5. Citation Section -->
   <AuthorsCitation />

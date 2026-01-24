@@ -1,0 +1,255 @@
+/* Active exploration session styles */
+#active-exploration .section-container {
+  max-width: 1200px;
+}
+
+.ae-session-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+}
+
+
+.ae-steps-panel {
+  margin: 1.75rem 0;
+  padding: 1.25rem 1.5rem;
+  border-radius: 14px;
+  border: 1px solid #e5e7eb;
+  background: #f8fafc;
+}
+
+.ae-steps-label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #4b2a6c;
+  margin-bottom: 0.7rem;
+}
+
+.ae-steps-count {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #4b5563;
+}
+
+.ae-steps-count-top {
+  transform: translateY(-8px);
+}
+
+.ae-step-slider {
+  width: 100%;
+  appearance: none;
+  height: 6px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #7c3aed 0%, #7c3aed 20%, #e7e3f2 20%, #e7e3f2 100%);
+  outline: none;
+  margin-bottom: 1rem;
+}
+
+.ae-step-slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #5b21b6;
+  box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.2);
+  cursor: pointer;
+  border: 2px solid #ffffff;
+}
+
+.ae-step-slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #5b21b6;
+  cursor: pointer;
+  border: 2px solid #ffffff;
+}
+
+.ae-steps-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.ae-step-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  color: #6b7280;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ae-step-button svg {
+  width: 36px;
+  height: 36px;
+  display: block;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.ae-step-button .ae-play-icon {
+  fill: currentColor;
+  stroke: none;
+}
+
+.ae-step-button:hover {
+  border-color: #c4b5fd;
+  color: #5b21b6;
+  background: #f5f3ff;
+}
+
+.ae-step-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.ae-session-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+}
+
+.ae-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 1.25rem;
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.06);
+}
+
+.ae-content-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.ae-action-line {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.ae-two-column {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: 1.25rem;
+}
+
+.ae-column {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.ae-card-title {
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #6b7280;
+  margin-bottom: 0.75rem;
+  font-weight: 700;
+}
+
+.ae-card-text {
+  margin: 0;
+  color: #374151;
+  font-size: 0.98rem;
+  line-height: 1.6;
+}
+
+.ae-observation-body {
+  display: grid;
+  grid-template-columns: minmax(220px, 1.1fr) minmax(200px, 1fr);
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.ae-observation-body.ae-observation-stack {
+  grid-template-columns: 1fr;
+}
+
+.ae-observation-body.ae-observation-stack .ae-observation-image {
+  display: flex;
+  justify-content: center;
+}
+
+.ae-observation-image {
+  border-radius: 12px;
+  overflow: hidden;
+  border: none;
+  background: #ffffff;
+}
+
+.ae-observation-image img {
+  width: 80%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+.ae-card-image {
+  border-radius: 12px;
+  overflow: hidden;
+  border: none;
+  background: #ffffff;
+  margin-bottom: 0.75rem;
+}
+
+.ae-card-image img {
+  width: 55%;
+  height: auto;
+  display: block;
+}
+
+.ae-map-image {
+  width: 80%;
+  margin: 0 auto;
+}
+
+.ae-caption-text {
+  color: #9ca3af;
+}
+
+.ae-action-icon {
+  width: 28px;
+  height: 28px;
+  display: inline-block;
+}
+
+.ae-action-colon {
+  color: #6b7280;
+  font-weight: 600;
+}
+
+@media (max-width: 900px) {
+  .ae-content-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ae-observation-body {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .ae-session-card {
+    padding: 1.5rem;
+  }
+
+  .ae-session-grid {
+    grid-template-columns: 1fr;
+  }
+}

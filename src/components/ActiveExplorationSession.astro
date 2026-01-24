@@ -1,0 +1,302 @@
+---
+// ActiveExplorationSession.astro - RAGEN-style active exploration session
+const rawBase = import.meta.env.BASE_URL ?? '/';
+const normalizedBase = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
+const resolveAssetPath = (path) => {
+  if (!path) return '';
+  if (/^https?:\/\//.test(path)) return path;
+  const trimmed = path.replace(/^\//, '');
+  return `${normalizedBase}${trimmed}`;
+};
+---
+<section id="active-exploration" class="content-section">
+  <div class="section-container">
+    <h2 class="section-title">Active Exploration Example</h2>
+    <p class="section-description">
+      Step through the agent's interaction to see what it observes, chooses, believes, and how that aligns with the ground truth.
+    </p>
+
+    <div class="ae-session-card">
+
+      <div class="ae-steps-panel">
+        <div class="ae-steps-top">
+          <div class="ae-steps-label">Steps</div>
+          <div class="ae-steps-count ae-steps-count-top">
+            <span id="ae-current-step">0</span> / <span id="ae-total-steps">6</span>
+          </div>
+        </div>
+        <input
+          id="ae-step-slider"
+          class="ae-step-slider"
+          type="range"
+          min="0"
+          max="6"
+          value="0"
+          step="1"
+          aria-label="Step progress"
+        />
+        <div class="ae-steps-controls">
+          <button id="ae-prev-step" class="ae-step-button" aria-label="Previous step">
+            <svg viewBox="0 0 24 24" width="48" height="48" aria-hidden="true">
+              <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+          </button>
+          <div class="ae-steps-count">
+            Step <span id="ae-current-step">0</span> of <span id="ae-total-steps">6</span>
+          </div>
+          <button id="ae-next-step" class="ae-step-button" aria-label="Next step">
+            <svg viewBox="0 0 24 24" width="48" height="48" aria-hidden="true">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </button>
+          <button id="ae-play-pause" class="ae-step-button" aria-label="Play steps">
+            <svg class="ae-play-icon" viewBox="0 0 24 24" width="48" height="48" aria-hidden="true">
+              <polygon points="8 5 19 12 8 19"></polygon>
+            </svg>
+            <svg class="ae-pause-icon" viewBox="0 0 24 24" width="48" height="48" aria-hidden="true">
+              <rect x="7" y="5" width="4" height="14"></rect>
+              <rect x="13" y="5" width="4" height="14"></rect>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="ae-session-grid">
+        <div class="ae-content-grid">
+          <div class="ae-column">
+            <div class="ae-card ae-action-card">
+              <div class="ae-card-title">Agent Action</div>
+              <div class="ae-action-line">
+                <img class="ae-action-icon" src={resolveAssetPath('/exploration_example/agent_icon.png')} alt="Agent icon" />
+                <span class="ae-action-colon">：</span>
+                <p id="ae-action-text" class="ae-card-text">Move forward to inspect the door.</p>
+              </div>
+            </div>
+
+            <div class="ae-card ae-observation-card">
+              <div class="ae-card-title">Observation</div>
+              <div class="ae-observation-body ae-observation-stack">
+                <div class="ae-observation-image">
+                  <img id="ae-observation-image" src="" alt="Observation view" />
+                </div>
+                <p id="ae-observation-text" class="ae-card-text ae-caption-text">
+                  The agent sees a partial room view with a door to the front-left.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="ae-column">
+            <div class="ae-card ae-truth-card">
+              <div class="ae-card-title">Ground Truth</div>
+              <div class="ae-card-image">
+                <img id="ae-truth-image" class="ae-map-image" src="" alt="Ground truth map" />
+              </div>
+            </div>
+
+            <div class="ae-card ae-belief-card">
+              <div class="ae-card-title">Agent Belief</div>
+              <div class="ae-card-image">
+                <img id="ae-belief-image" class="ae-map-image" src="" alt="Belief map" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const rawBasePath = import.meta.env.BASE_URL ?? '/';
+  const normalizedBasePath = rawBasePath.endsWith('/') ? rawBasePath : `${rawBasePath}/`;
+  const resolveAssetPath = (path) => {
+    if (!path) return '';
+    if (/^https?:\/\//.test(path)) return path;
+    const trimmed = path.replace(/^\//, '');
+    return `${normalizedBasePath}${trimmed}`;
+  };
+
+  const steps = [
+    {
+      observationImage: '',
+      observationText: 'Initial state.',
+      action: 'Initial state',
+      beliefImage: '/exploration_example/step0_belief.png',
+      truthImage: '/exploration_example/step0_gt.png'
+    },
+    {
+      observationImage: '/exploration_example/step1_observe.png',
+      observationText: 'Door: front-left, mid distance.',
+      action: 'Turn 90; Observe',
+      beliefImage: '/exploration_example/step1_belief.png',
+      truthImage: '/exploration_example/step1_gt.png'
+    },
+    {
+      observationImage: '/exploration_example/step2_observe.png',
+      observationText: 'Sofa: front, mid distance.',
+      action: 'Turn 90; Observe',
+      beliefImage: '/exploration_example/step2_belief.png',
+      truthImage: '/exploration_example/step2_gt.png'
+    },
+    {
+      observationImage: '/exploration_example/step3_observe.png',
+      observationText: 'Fire extinguisher: front, near.',
+      action: 'Turn 270; Go to door; Observe',
+      beliefImage: '/exploration_example/step3_belief.png',
+      truthImage: '/exploration_example/step3_gt.png'
+    },
+    {
+      observationImage: '/exploration_example/step4_observe.png',
+      observationText: 'Crate: front-left, mid distance.',
+      action: 'Turn 90; Observe',
+      beliefImage: '/exploration_example/step4_belief.png',
+      truthImage: '/exploration_example/step4_gt.png'
+    },
+    {
+      observationImage: '/exploration_example/step5_observe.png',
+      observationText: 'Fire extinguisher: front, mid distance. Door: front-left, mid distance.',
+      action: 'Go to crate; Turn 180; Observe',
+      beliefImage: '/exploration_example/step5_belief.png',
+      truthImage: '/exploration_example/step5_gt.png'
+    },
+    {
+      observationImage: '',
+      observationText: 'No further observation.',
+      action: 'Terminate',
+      beliefImage: '/exploration_example/step5_belief.png',
+      truthImage: '/exploration_example/step5_gt.png'
+    }
+  ];
+
+  let sliderElement = null;
+  let isPlaying = false;
+  let playInterval = null;
+
+  const updateStep = (index) => {
+    const step = steps[index];
+    if (!step) return;
+
+    const currentStep = document.getElementById('ae-current-step');
+    const observationImage = document.getElementById('ae-observation-image');
+    const observationText = document.getElementById('ae-observation-text');
+    const actionText = document.getElementById('ae-action-text');
+    const beliefImage = document.getElementById('ae-belief-image');
+    const truthImage = document.getElementById('ae-truth-image');
+
+    if (currentStep) currentStep.textContent = String(index);
+    if (observationImage) observationImage.src = resolveAssetPath(step.observationImage);
+    if (observationText) observationText.textContent = step.observationText;
+    if (actionText) actionText.textContent = step.action;
+    if (beliefImage) beliefImage.src = resolveAssetPath(step.beliefImage);
+    if (truthImage) truthImage.src = resolveAssetPath(step.truthImage);
+
+    if (observationImage) {
+      const hasObservation = Boolean(step.observationImage);
+      observationImage.style.display = hasObservation ? 'block' : 'none';
+      observationImage.parentElement.style.display = hasObservation ? 'block' : 'none';
+    }
+
+    if (beliefImage) {
+      const hasBelief = Boolean(step.beliefImage);
+      beliefImage.style.display = hasBelief ? 'block' : 'none';
+      beliefImage.parentElement.style.display = hasBelief ? 'block' : 'none';
+    }
+
+    if (truthImage) {
+      const hasTruth = Boolean(step.truthImage);
+      truthImage.style.display = hasTruth ? 'block' : 'none';
+      truthImage.parentElement.style.display = hasTruth ? 'block' : 'none';
+    }
+
+    if (sliderElement) {
+      const percentage = steps.length > 1 ? (index / (steps.length - 1)) * 100 : 0;
+      sliderElement.style.background = `linear-gradient(90deg, #7c3aed 0%, #7c3aed ${percentage}%, #e7e3f2 ${percentage}%, #e7e3f2 100%)`;
+    }
+
+    if (sliderElement) {
+      sliderElement.value = String(index);
+    }
+
+    const prevButton = document.getElementById('ae-prev-step');
+    const nextButton = document.getElementById('ae-next-step');
+    if (prevButton) prevButton.disabled = index === 0;
+    if (nextButton) nextButton.disabled = index === steps.length - 1;
+  };
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const totalSteps = document.getElementById('ae-total-steps');
+    const slider = document.getElementById('ae-step-slider');
+    const prevButton = document.getElementById('ae-prev-step');
+    const nextButton = document.getElementById('ae-next-step');
+    const playPauseButton = document.getElementById('ae-play-pause');
+    const playIcon = playPauseButton?.querySelector('.ae-play-icon');
+    const pauseIcon = playPauseButton?.querySelector('.ae-pause-icon');
+
+    if (totalSteps) totalSteps.textContent = String(steps.length - 1);
+    if (slider) {
+      slider.setAttribute('max', String(steps.length - 1));
+      slider.value = '0';
+      sliderElement = slider;
+    }
+
+    if (slider) {
+      slider.addEventListener('input', (event) => {
+        const value = Number(event.target.value) || 0;
+        updateStep(value);
+      });
+    }
+
+    if (prevButton) {
+      prevButton.addEventListener('click', () => {
+        const current = Number(sliderElement?.value || '0');
+        if (current > 0) updateStep(current - 1);
+      });
+    }
+
+    if (nextButton) {
+      nextButton.addEventListener('click', () => {
+        const current = Number(sliderElement?.value || '0');
+        if (current < steps.length - 1) updateStep(current + 1);
+      });
+    }
+
+    const stopPlayback = () => {
+      if (playInterval) {
+        clearInterval(playInterval);
+        playInterval = null;
+      }
+      isPlaying = false;
+      if (playIcon) playIcon.style.display = 'block';
+      if (pauseIcon) pauseIcon.style.display = 'none';
+    };
+
+    const startPlayback = () => {
+      if (isPlaying) return;
+      isPlaying = true;
+      if (playIcon) playIcon.style.display = 'none';
+      if (pauseIcon) pauseIcon.style.display = 'block';
+      playInterval = setInterval(() => {
+        const current = Number(sliderElement?.value || '0');
+        if (current < steps.length - 1) {
+          updateStep(current + 1);
+        } else {
+          stopPlayback();
+        }
+      }, 3000);
+    };
+
+    if (playPauseButton) {
+      if (pauseIcon) pauseIcon.style.display = 'none';
+      playPauseButton.addEventListener('click', () => {
+        if (isPlaying) {
+          stopPlayback();
+        } else {
+          startPlayback();
+        }
+      });
+    }
+
+    updateStep(0);
+  });
+</script>
