@@ -22,7 +22,7 @@ const resolveAssetPath = (path) => {
         <div class="ae-steps-top">
           <div class="ae-steps-label">Steps</div>
           <div class="ae-steps-count ae-steps-count-top">
-            <span id="ae-current-step">0</span> / <span id="ae-total-steps">6</span>
+            <span id="ae-current-step-top">0</span> / <span id="ae-total-steps-top">6</span>
           </div>
         </div>
         <input
@@ -42,7 +42,7 @@ const resolveAssetPath = (path) => {
             </svg>
           </button>
           <div class="ae-steps-count">
-            Step <span id="ae-current-step">0</span> of <span id="ae-total-steps">6</span>
+            Step <span id="ae-current-step-mid">0</span> of <span id="ae-total-steps-mid">6</span>
           </div>
           <button id="ae-next-step" class="ae-step-button" aria-label="Next step">
             <svg viewBox="0 0 24 24" width="48" height="48" aria-hidden="true">
@@ -142,7 +142,7 @@ const resolveAssetPath = (path) => {
     {
       observationImage: '/exploration_example/step3_observe.png',
       observationText: 'Fire extinguisher: front, near.',
-      action: 'Turn 270; Go to door; Observe',
+      action: 'Turn 270; Go to the blue door; Observe',
       beliefImage: '/exploration_example/step3_belief.png',
       truthImage: '/exploration_example/step3_gt.png'
     },
@@ -156,7 +156,7 @@ const resolveAssetPath = (path) => {
     {
       observationImage: '/exploration_example/step5_observe.png',
       observationText: 'Fire extinguisher: front, mid distance. Door: front-left, mid distance.',
-      action: 'Go to crate; Turn 180; Observe',
+      action: 'Go to the basket; Turn 180; Observe',
       beliefImage: '/exploration_example/step5_belief.png',
       truthImage: '/exploration_example/step5_gt.png'
     },
@@ -177,14 +177,16 @@ const resolveAssetPath = (path) => {
     const step = steps[index];
     if (!step) return;
 
-    const currentStep = document.getElementById('ae-current-step');
+    const currentStepTop = document.getElementById('ae-current-step-top');
+    const currentStepMid = document.getElementById('ae-current-step-mid');
     const observationImage = document.getElementById('ae-observation-image');
     const observationText = document.getElementById('ae-observation-text');
     const actionText = document.getElementById('ae-action-text');
     const beliefImage = document.getElementById('ae-belief-image');
     const truthImage = document.getElementById('ae-truth-image');
 
-    if (currentStep) currentStep.textContent = String(index);
+    if (currentStepTop) currentStepTop.textContent = String(index);
+    if (currentStepMid) currentStepMid.textContent = String(index);
     if (observationImage) observationImage.src = resolveAssetPath(step.observationImage);
     if (observationText) observationText.textContent = step.observationText;
     if (actionText) actionText.textContent = step.action;
@@ -225,7 +227,8 @@ const resolveAssetPath = (path) => {
   };
 
   document.addEventListener('DOMContentLoaded', () => {
-    const totalSteps = document.getElementById('ae-total-steps');
+    const totalStepsTop = document.getElementById('ae-total-steps-top');
+    const totalStepsMid = document.getElementById('ae-total-steps-mid');
     const slider = document.getElementById('ae-step-slider');
     const prevButton = document.getElementById('ae-prev-step');
     const nextButton = document.getElementById('ae-next-step');
@@ -233,7 +236,8 @@ const resolveAssetPath = (path) => {
     const playIcon = playPauseButton?.querySelector('.ae-play-icon');
     const pauseIcon = playPauseButton?.querySelector('.ae-pause-icon');
 
-    if (totalSteps) totalSteps.textContent = String(steps.length - 1);
+    if (totalStepsTop) totalStepsTop.textContent = String(steps.length - 1);
+    if (totalStepsMid) totalStepsMid.textContent = String(steps.length - 1);
     if (slider) {
       slider.setAttribute('max', String(steps.length - 1));
       slider.value = '0';
