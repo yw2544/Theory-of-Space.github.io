@@ -7,6 +7,40 @@
     <h2 class="section-title">Leaderboard</h2>
     <p class="section-description">Performance comparison of different models on <span class="tos-text">Theory of Space</span> (ToS) benchmark. Dark highlighting indicates the best result within each category, light highlighting denotes the second-best.</p>
     
+    <div class="results-analysis-single">
+      <h3 class="analysis-heading">Key Findings</h3>
+      <div class="findings-grid">
+        <div class="finding-item">
+          <span class="finding-icon">🎯</span>
+          <div class="finding-content">
+            <strong>Active exploration is the bottleneck</strong>
+            <span class="finding-detail">GPT-5.2: 0.57→0.46 | GEMINI-3 PRO: 0.60→0.57 (passive→active)</span>
+          </div>
+        </div>
+        <div class="finding-item">
+          <span class="finding-icon">📊</span>
+          <div class="finding-content">
+            <strong>Substantial modality gap</strong>
+            <span class="finding-detail">GPT-5.2: 0.72 text vs 0.46 vision | GEMINI-3 PRO: 0.81 text vs 0.57 vision</span>
+          </div>
+        </div>
+        <div class="finding-item">
+          <span class="finding-icon">⚡</span>
+          <div class="finding-content">
+            <strong>Inefficient exploration</strong>
+            <span class="finding-detail">Proxy agents: ~10 steps to coverage | Models: far more steps with no gain</span>
+          </div>
+        </div>
+        <div class="finding-item">
+          <span class="finding-icon">🔍</span>
+          <div class="finding-content">
+            <strong>Exploration patterns differ</strong>
+            <span class="finding-detail">GPT-5.2: jumps to doors early | GEMINI-3 PRO: rotates first like scout proxy</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="leaderboard-container">
       <!-- Main Mode Tabs -->
       <div class="metric-tabs main-tabs">
@@ -52,6 +86,68 @@
 <style is:global>
   #leaderboard .section-container {
     max-width: 1300px;
+  }
+
+  /* Results Analysis - Single Column */
+  #leaderboard .results-analysis-single {
+    background: #fff;
+    border-radius: 12px;
+    padding: 1.5rem 2rem;
+    margin: 2rem 0;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e2e8f0;
+  }
+
+  #leaderboard .analysis-heading {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #2a2f6c;
+    margin: 0 0 1.25rem 0;
+    text-align: center;
+  }
+
+  #leaderboard .findings-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  #leaderboard .finding-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border-left: 3px solid #2a2f6c;
+  }
+
+  #leaderboard .finding-icon {
+    font-size: 1.25rem;
+    flex-shrink: 0;
+  }
+
+  #leaderboard .finding-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  #leaderboard .finding-content strong {
+    font-size: 0.95rem;
+    color: #1f2a60;
+  }
+
+  #leaderboard .finding-detail {
+    font-size: 0.85rem;
+    color: #666;
+    line-height: 1.4;
+  }
+
+  @media (max-width: 768px) {
+    #leaderboard .findings-grid {
+      grid-template-columns: 1fr;
+    }
   }
 
   #leaderboard .leaderboard-container {

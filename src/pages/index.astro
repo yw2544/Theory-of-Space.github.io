@@ -51,14 +51,15 @@ const pageTitle = "Theory of Space";
         // Handle the new two-line title structure
         const titleLines = titleElement.querySelectorAll('.title-line');
         
-        titleLines.forEach((line, lineIndex) => {
+        let totalChars = 0;
+        titleLines.forEach((line) => {
           const lineText = (line as HTMLElement).innerText;
           (line as HTMLElement).innerHTML = '';
           
           for (let i = 0; i < lineText.length; i++) {
             const charSpan = document.createElement('span');
             charSpan.className = 'reveal-char';
-            charSpan.style.animationDelay = `${(lineIndex * lineText.length + i) * 0.05}s`;
+            charSpan.style.animationDelay = `${(totalChars + i) * 0.03}s`;
             
             // Special handling for spaces to ensure they display correctly
             if (lineText[i] === ' ') {
@@ -67,8 +68,10 @@ const pageTitle = "Theory of Space";
               charSpan.innerText = lineText[i];
             }
             
-                         (line as HTMLElement).appendChild(charSpan);
+            (line as HTMLElement).appendChild(charSpan);
           }
+
+          totalChars += lineText.length;
         });
       }
     };

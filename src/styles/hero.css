@@ -1,6 +1,6 @@
 /* Hero Section styles */
 .hero-section {
-  max-width: 1000px;
+  max-width: var(--page-max-width, 1500px);
   margin: 4rem auto;
   padding: 1rem;
   text-align: center;
@@ -23,8 +23,14 @@
   gap: 1.5rem;
 }
 
+.title-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .title-logo {
-  height: 80px;
+  height: 150px;
   width: auto;
   flex-shrink: 0;
 }
@@ -36,7 +42,7 @@
 }
 
 .main-title { 
-  font-size: 3.25rem; 
+  font-size: 3rem; 
   font-weight: 800; 
   color: #2a2f6c; 
   min-height: 1.2em; 
@@ -44,6 +50,7 @@
   display: flex;
   flex-direction: column;
   line-height: 1.1;
+  margin: 0;
 }
 
 .title-line {
@@ -51,10 +58,11 @@
 }
 
 .subtitle { 
-  font-size: 2.75rem; 
+  font-size: 2.4rem; 
   font-weight: 700; 
   color: #333; 
-  margin-bottom: 1rem; 
+  margin: 0;
+  line-height: 1.15;
 }
 
 .description { 
@@ -176,7 +184,7 @@
   /* background-color: #f8f9fa; */
   padding: 1rem;
   border-radius: 8px;
-  max-width: 1200px;
+  max-width: var(--page-max-width, 1500px);
   margin-left: auto;
   margin-right: auto;
 }
@@ -192,7 +200,7 @@
 }
 
 .hero-qa {
-  max-width: 1000px;
+  max-width: var(--page-max-width, 1500px);
   margin: 4rem auto 0;
   display: grid;
   gap: 2rem;
@@ -259,7 +267,7 @@
   }
   
   .subtitle {
-    font-size: 2rem;
+    font-size: 2.25rem;
   }
   
   .description {
@@ -283,6 +291,10 @@
   
   .main-title {
     font-size: 2.5rem;
+  }
+
+  .subtitle {
+    font-size: 2.05rem;
   }
   
   .teaser-figure {
