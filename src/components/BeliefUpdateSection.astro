@@ -1,0 +1,295 @@
+---
+// BeliefUpdateSection.astro - False belief / belief updating section
+---
+
+<section id="belief-update" class="content-section alt-background">
+  <div class="section-container">
+    <h2 class="section-title">Belief Update Task</h2>
+    <p class="section-description">
+      We introduce a dynamic perturbation task to probe the agent's ability to handle non-stationarity.
+      After exploration, 4 objects are secretly relocated/reoriented. The agent must re-explore to identify changes.
+    </p>
+    
+    <div class="metrics-explanation">
+      <ul class="metrics-list">
+        <li><strong>Identification Accuracy:</strong> F1 score for correctly identifying which objects changed.</li>
+        <li><strong>Average Steps:</strong> Cost of belief revision. Includes <em>Redundancy</em> (steps taken after finding all changes).</li>
+        <li><strong>Belief Correctness:</strong> Map accuracy on the changed objects.</li>
+        <li><strong>Belief Update:</strong> Measures if the agent overwrites its old map (high score) or exhibits belief inertia (low score).</li>
+      </ul>
+    </div>
+
+    <div class="table-wrapper">
+      <table class="probing-table">
+        <thead>
+          <!-- Row 1: Group Headers -->
+          <tr>
+            <th rowspan="2" class="model-header">Methods</th>
+            <th colspan="2" class="group-header">Avg. Steps &darr;</th>
+            <th colspan="2" class="group-header">Identification (%) &uarr;</th>
+            <th colspan="2" class="group-header">Belief Correctness (%) &uarr;</th>
+            <th colspan="2" class="group-header">Belief Update (%) &uarr;</th>
+          </tr>
+          <!-- Row 2: Sub-headers -->
+          <tr>
+            <th class="sub-header">All</th>
+            <th class="sub-header">Red.</th>
+            <th class="sub-header">Ori.</th>
+            <th class="sub-header">Pos.</th>
+            <th class="sub-header">Ori.</th>
+            <th class="sub-header">Pos.</th>
+            <th class="sub-header">Ori.</th>
+            <th class="sub-header">Pos.</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Vision-based World -->
+          <tr class="section-row">
+            <td colspan="9">Vision-based World</td>
+          </tr>
+          <tr class="proprietary-row">
+            <td class="model-name">GPT-5.2</td>
+            <td>8.64</td>
+            <td>2.94</td>
+            <td>13.0</td>
+            <td>63.6</td>
+            <td>12.5</td>
+            <td>40.7</td>
+            <td>15.5</td>
+            <td>30.8</td>
+          </tr>
+          <tr class="proprietary-row">
+            <td class="model-name">GEMINI-3 PRO</td>
+            <td class="best-score">7.30</td>
+            <td class="best-score">1.84</td>
+            <td class="best-score">25.5</td>
+            <td class="best-score">78.1</td>
+            <td class="best-score">30.2</td>
+            <td class="best-score">68.1</td>
+            <td class="best-score">26.4</td>
+            <td class="best-score">43.4</td>
+          </tr>
+
+          <!-- Text-based World -->
+          <tr class="section-row">
+            <td colspan="9">Text-based World</td>
+          </tr>
+          <tr class="proprietary-row">
+            <td class="model-name">GPT-5.2</td>
+            <td class="best-score">6.22</td>
+            <td>0.23</td>
+            <td class="best-score">96.3</td>
+            <td class="best-score">95.5</td>
+            <td>88.0</td>
+            <td class="best-score">75.5</td>
+            <td class="best-score">93.4</td>
+            <td class="best-score">45.7</td>
+          </tr>
+          <tr class="proprietary-row">
+            <td class="model-name">GEMINI-3 PRO</td>
+            <td>6.26</td>
+            <td class="best-score">0.14</td>
+            <td>95.9</td>
+            <td>94.1</td>
+            <td class="best-score">89.4</td>
+            <td>71.2</td>
+            <td>89.1</td>
+            <td>42.8</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Conclusion -->
+    <div class="results-analysis-single" style="margin-top: 2rem;">
+      <h3 class="analysis-heading">Belief Update Conclusion</h3>
+      <div class="findings-grid">
+        <div class="finding-item">
+          <span class="finding-icon">🔄</span>
+          <div class="finding-content">
+            <strong>Severe Belief Inertia in Vision</strong>
+            <span class="finding-detail">Vision agents fail to overwrite obsolete orientation beliefs despite new evidence (Belief Update score ~20%).</span>
+          </div>
+        </div>
+        <div class="finding-item">
+          <span class="finding-icon">🛑</span>
+          <div class="finding-content">
+            <strong>High Redundancy</strong>
+            <span class="finding-detail">Vision agents take many redundant steps after changes are visible, indicating failure to recognize the update is complete.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  #belief-update .section-container {
+    max-width: 1000px;
+  }
+
+  /* Metrics Explanation */
+  .metrics-explanation {
+    max-width: 900px;
+    margin: 0 auto 2rem;
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+
+  .metrics-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+  }
+
+  .metrics-list li {
+    font-size: 0.95rem;
+    color: #4b5563;
+    line-height: 1.5;
+  }
+
+  .metrics-list li strong {
+    color: #2a2f6c;
+    font-weight: 700;
+  }
+
+  /* Table Styles (Reuse where possible, but scoped) */
+  .table-wrapper {
+    overflow-x: auto;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    background: white;
+  }
+
+  .probing-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8rem;
+  }
+
+  th {
+    padding: 0.6rem 0.4rem;
+    text-align: center;
+    border: 1px solid #eee;
+  }
+
+  td {
+    padding: 0.5rem 0.3rem;
+    text-align: center;
+    border: 1px solid #eee;
+  }
+
+  .model-header {
+    text-align: left;
+    padding-left: 1rem;
+    background: #f8f9fa;
+    font-weight: 700;
+    min-width: 150px;
+    color: #333;
+  }
+
+  .group-header {
+    font-weight: 700;
+    color: #2a2f6c;
+    background: #fff;
+  }
+
+  .sub-header {
+    font-size: 0.85rem;
+    background: #f0f4ff;
+    font-style: italic;
+    color: #555;
+  }
+
+  .section-row td {
+    background: #eef2f6;
+    font-weight: 700;
+    text-align: left;
+    padding: 0.8rem 1rem;
+    color: #2a2f6c;
+    border-top: 2px solid #dde1e6;
+  }
+
+  .model-name {
+    text-align: left;
+    padding-left: 1rem;
+    font-weight: 600;
+    color: #333;
+  }
+
+  .proprietary-row {
+    background-color: #FFF4F0;
+  }
+
+  .best-score {
+    background-color: rgba(100, 100, 100, 0.25);
+    font-weight: 700;
+  }
+
+  /* Conclusion */
+  .results-analysis-single {
+    background: #fff;
+    border-radius: 12px;
+    padding: 1.5rem 2rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e2e8f0;
+  }
+
+  .analysis-heading {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #2a2f6c;
+    margin: 0 0 1.25rem 0;
+    text-align: center;
+  }
+
+  .findings-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .finding-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border-left: 3px solid #2a2f6c;
+  }
+
+  .finding-icon {
+    font-size: 1.25rem;
+    flex-shrink: 0;
+  }
+
+  .finding-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .finding-content strong {
+    font-size: 0.95rem;
+    color: #1f2a60;
+  }
+
+  .finding-detail {
+    font-size: 0.85rem;
+    color: #666;
+    line-height: 1.4;
+  }
+
+  @media (max-width: 768px) {
+    .findings-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
