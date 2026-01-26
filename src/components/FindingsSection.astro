@@ -1,69 +1,134 @@
 ---
-// FindingsSection.astro - Key findings with creative UI design
+const rawBase = import.meta.env.BASE_URL ?? '/';
+const normalizedBase = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
+const assetPath = (path: string) => `${normalizedBase}${path.replace(/^\//, '')}`;
 ---
-<section id="results" class="content-section">
-  <div class="section-container">
-    <h2 class="section-title">Key Findings</h2>
-    <p class="section-description">Our analysis reveals critical insights into spatial belief construction capabilities of foundation models.</p>
 
-    <div class="findings-grid">
+<!-- Detailed Analysis (Expandable Cards) -->
+<section id="detailed-analysis" class="content-section">
+  <div class="section-container">
+    <h3 class="analysis-heading" style="margin-bottom: 2rem;">Detailed Analysis</h3>
+    <div class="findings-grid-cards">
       <!-- Finding 1 -->
-      <div class="finding-card finding-1">
-        <div class="finding-number">01</div>
-        <div class="finding-content">
-          <h3 class="finding-title">Active Exploration Bottleneck</h3>
+      <details class="finding-card finding-1">
+        <summary class="finding-header">
+          <div class="finding-number">01</div>
+          <div class="finding-content">
+            <h3 class="finding-title">Active Exploration Bottleneck</h3>
+            <p class="finding-summary">Active planning is the bottleneck.</p>
+          </div>
+          <span class="finding-toggle" aria-hidden="true"></span>
+        </summary>
+        <div class="finding-details">
           <p class="finding-text">
             Active exploration is a key bottleneck: performance drops when models must choose actions under partial observability, compared to passive comprehension from standardized logs.
           </p>
+          <div class="finding-media-grid">
+            <img
+              src={assetPath('passive-active-gap-text.png')}
+              alt="Passive vs active gap in text world"
+              class="finding-media"
+              loading="lazy"
+            />
+            <img
+              src={assetPath('passive-active-gap-vision.png')}
+              alt="Passive vs active gap in vision world"
+              class="finding-media"
+              loading="lazy"
+            />
+            <img
+              src={assetPath('infogain.png')}
+              alt="Information gain analysis"
+              class="finding-media"
+              loading="lazy"
+            />
+          </div>
         </div>
-        <div class="finding-accent"></div>
-      </div>
+      </details>
 
       <!-- Finding 2 -->
-      <div class="finding-card finding-2">
-        <div class="finding-number">02</div>
-        <div class="finding-content">
-          <h3 class="finding-title">Modality Gap</h3>
+      <details class="finding-card finding-2">
+        <summary class="finding-header">
+          <div class="finding-number">02</div>
+          <div class="finding-content">
+            <h3 class="finding-title">Modality Gap</h3>
+            <p class="finding-summary">Text stays ahead of vision.</p>
+          </div>
+          <span class="finding-toggle" aria-hidden="true"></span>
+        </summary>
+        <div class="finding-details">
           <p class="finding-text">
             A clear modality gap persists: text-based settings consistently outperform vision-based settings in spatial belief construction and utilization.
           </p>
+          <div class="finding-media-grid finding-media-grid-2">
+            <img
+              src={assetPath('vision-text-gap-passive.png')}
+              alt="Vision vs text gap under passive setting"
+              class="finding-media"
+              loading="lazy"
+            />
+            <img
+              src={assetPath('vision-text-gap-active.png')}
+              alt="Vision vs text gap under active setting"
+              class="finding-media"
+              loading="lazy"
+            />
+          </div>
         </div>
-        <div class="finding-accent"></div>
-      </div>
+      </details>
 
       <!-- Finding 3 -->
-      <div class="finding-card finding-3">
-        <div class="finding-number">03</div>
-        <div class="finding-content">
-          <h3 class="finding-title">High Cost, Low Return</h3>
+      <details class="finding-card finding-3">
+        <summary class="finding-header">
+          <div class="finding-number">03</div>
+          <div class="finding-content">
+            <h3 class="finding-title">High Cost, Low Return</h3>
+            <p class="finding-summary">Steps grow, gains flatten.</p>
+          </div>
+          <span class="finding-toggle" aria-hidden="true"></span>
+        </summary>
+        <div class="finding-details">
           <p class="finding-text">
             Exploration shows high cost, low return: more steps often yield limited gains as information gain saturates, indicating inefficient uncertainty reduction.
           </p>
         </div>
-        <div class="finding-accent"></div>
-      </div>
+      </details>
 
       <!-- Finding 4 -->
-      <div class="finding-card finding-4">
-        <div class="finding-number">04</div>
-        <div class="finding-content">
-          <h3 class="finding-title">Perception Bottleneck</h3>
+      <details class="finding-card finding-4">
+        <summary class="finding-header">
+          <div class="finding-number">04</div>
+          <div class="finding-content">
+            <h3 class="finding-title">Bottleneck: Perception & Stability</h3>
+            <p class="finding-summary">Perception noise and unstable belief.</p>
+          </div>
+          <span class="finding-toggle" aria-hidden="true"></span>
+        </summary>
+        <div class="finding-details">
           <p class="finding-text">
-            Probing points to perception as a main bottleneck: perception errors undermine belief consistency and stability, degrading overall spatial belief quality.
+            Vision perception remains a key bottleneck, especially for object orientation. Unstable cognitive map prediction degrades spatial belief beyond initial perception.
           </p>
         </div>
-        <div class="finding-accent"></div>
-      </div>
+      </details>
     </div>
   </div>
 </section>
 
 <style>
-  #results .section-container {
-    max-width: 1400px;
+  /* Detailed Analysis (Cards) Styles */
+  #detailed-analysis .section-container {
+    max-width: var(--page-max-width, 1500px);
   }
 
-  .findings-grid {
+  .analysis-heading {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #2a2f6c;
+    margin: 0 0 1.25rem 0;
+    text-align: center;
+  }
+
+  .findings-grid-cards {
     display: flex;
     flex-direction: column;
     gap: 2rem;
@@ -79,9 +144,7 @@
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     overflow: hidden;
     border: 1px solid rgba(0, 0, 0, 0.05);
-    display: flex;
-    align-items: flex-start;
-    gap: 2rem;
+    display: block;
   }
 
   .finding-card::before {
@@ -96,6 +159,19 @@
     transition: opacity 0.4s ease;
   }
 
+  .finding-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
   .finding-card:hover {
     transform: translateY(-4px);
     box-shadow: 0 16px 48px rgba(0, 0, 0, 0.12);
@@ -103,6 +179,26 @@
 
   .finding-card:hover::before {
     opacity: 1;
+  }
+
+  .finding-card:hover::after {
+    transform: scaleX(1);
+  }
+
+  .finding-card summary {
+    list-style: none;
+  }
+
+  .finding-card summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .finding-header {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 2rem;
+    cursor: pointer;
   }
 
   .finding-number {
@@ -128,6 +224,13 @@
     line-height: 1.3;
   }
 
+  .finding-summary {
+    font-size: 1.05rem;
+    color: #2e2e2e;
+    margin: 0;
+    font-weight: 600;
+  }
+
   .finding-text {
     font-size: 1rem;
     line-height: 1.7;
@@ -135,20 +238,61 @@
     margin: 0;
   }
 
-  .finding-accent {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: currentColor;
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  .finding-toggle {
+    width: 32px;
+    height: 32px;
+    border-radius: 999px;
+    border: 1px solid currentColor;
+    display: grid;
+    place-items: center;
+    font-size: 1.4rem;
+    line-height: 1;
+    color: currentColor;
+    transition: transform 0.3s ease, background 0.3s ease;
+    flex-shrink: 0;
   }
 
-  .finding-card:hover .finding-accent {
-    transform: scaleX(1);
+  .finding-toggle::before {
+    content: '+';
+  }
+
+  details[open] .finding-toggle {
+    transform: rotate(180deg);
+    background: rgba(255, 255, 255, 0.6);
+  }
+
+  details[open] .finding-toggle::before {
+    content: '−';
+  }
+
+  .finding-details {
+    margin-top: 1.5rem;
+    padding-left: 96px;
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .finding-media-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.5rem;
+  }
+
+  .finding-media-grid-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .finding-media {
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.12);
+    border: 1px solid #e2e8f0;
+    background: #fff;
+  }
+
+  details[open] .finding-header {
+    margin-bottom: 0.5rem;
   }
 
   /* Finding 1 - Blue gradient */
@@ -194,8 +338,6 @@
   @media (max-width: 768px) {
     .finding-card {
       padding: 1.5rem;
-      gap: 1.5rem;
-      flex-direction: column;
     }
 
     .finding-number {
@@ -207,9 +349,26 @@
       font-size: 1.3rem;
     }
 
+    .finding-header {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    .finding-toggle {
+      justify-self: flex-start;
+    }
+
+    .finding-details {
+      padding-left: 0;
+    }
+
+    .finding-media-grid,
+    .finding-media-grid-2 {
+      grid-template-columns: 1fr;
+    }
+
     .finding-text {
       font-size: 0.95rem;
     }
   }
 </style>
-

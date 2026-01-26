@@ -69,19 +69,28 @@ const resolveAssetPath = (path) => {
               <div class="ae-action-line">
                 <img class="ae-action-icon" src={resolveAssetPath('/exploration_example/agent_icon.png')} alt="Agent icon" />
                 <span class="ae-action-colon">：</span>
-                <p id="ae-action-text" class="ae-card-text">Move forward to inspect the door.</p>
+                <p id="ae-action-text" class="ae-card-text ae-action-text-enhanced ae-fade-target">Move forward to inspect the door.</p>
               </div>
             </div>
 
             <div class="ae-card ae-observation-card">
               <div class="ae-card-title">Observation</div>
               <div class="ae-observation-body ae-observation-stack">
-                <div class="ae-observation-image">
-                  <img id="ae-observation-image" src="" alt="Observation view" />
+                <!-- Vision World -->
+                <div class="ae-obs-section">
+                   <div class="ae-obs-label">Vision World</div>
+                   <div class="ae-observation-image-container">
+                     <img id="ae-observation-image" class="ae-fade-target" src="" alt="Observation view" />
+                     <div id="ae-vision-no-obs" class="ae-no-obs-text" style="display: none;">No observation</div>
+                   </div>
                 </div>
-                <p id="ae-observation-text" class="ae-card-text ae-caption-text">
-                  The agent sees a partial room view with a door to the front-left.
-                </p>
+                <!-- Text World -->
+                <div class="ae-obs-section">
+                   <div class="ae-obs-label">Text World</div>
+                   <p id="ae-observation-text" class="ae-card-text ae-caption-text ae-fade-target">
+                     The agent sees a partial room view with a door to the front-left.
+                   </p>
+                </div>
               </div>
             </div>
           </div>
@@ -90,14 +99,14 @@ const resolveAssetPath = (path) => {
             <div class="ae-card ae-truth-card">
               <div class="ae-card-title">Ground Truth</div>
               <div class="ae-card-image">
-                <img id="ae-truth-image" class="ae-map-image" src="" alt="Ground truth map" />
+                <img id="ae-truth-image" class="ae-map-image ae-fade-target" src="" alt="Ground truth map" />
               </div>
             </div>
 
             <div class="ae-card ae-belief-card">
               <div class="ae-card-title">Agent Belief</div>
               <div class="ae-card-image">
-                <img id="ae-belief-image" class="ae-map-image" src="" alt="Belief map" />
+                <img id="ae-belief-image" class="ae-map-image ae-fade-target" src="" alt="Belief map" />
               </div>
             </div>
           </div>
@@ -106,6 +115,66 @@ const resolveAssetPath = (path) => {
     </div>
   </div>
 </section>
+
+<style>
+  .ae-action-text-enhanced {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #4b2a6c;
+    background: #f3e8ff;
+    padding: 0.4rem 0.8rem;
+    border-radius: 8px;
+    display: inline-block;
+  }
+  
+  .ae-obs-section {
+    margin-bottom: 1rem;
+  }
+  
+  .ae-obs-label {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #64748b;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 2px solid #e2e8f0;
+    padding-bottom: 0.2rem;
+    display: inline-block;
+  }
+
+  .ae-observation-image-container {
+    min-height: 100px;
+    background: #f9fafb;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .ae-no-obs-text {
+    color: #9ca3af;
+    font-style: italic;
+    padding: 1rem;
+  }
+
+  .ae-fade-target {
+    transition: opacity 0.8s ease-in-out;
+    opacity: 1;
+  }
+
+  .ae-caption-text {
+    font-size: 1.25rem !important;
+    line-height: 1.6;
+    color: #1e293b;
+    font-weight: 500;
+  }
+
+  .ae-fade-out {
+    opacity: 0.2;
+  }
+</style>
 
 <script>
   const rawBasePath = import.meta.env.BASE_URL ?? '/';
@@ -120,7 +189,7 @@ const resolveAssetPath = (path) => {
   const steps = [
     {
       observationImage: '',
-      observationText: 'Initial state.',
+      observationText: 'No observation.',
       action: 'Initial state',
       beliefImage: '/exploration_example/step0_belief.png',
       truthImage: '/exploration_example/step0_gt.png'
@@ -162,7 +231,7 @@ const resolveAssetPath = (path) => {
     },
     {
       observationImage: '',
-      observationText: 'No further observation.',
+      observationText: 'No observation.',
       action: 'Terminate',
       beliefImage: '/exploration_example/step5_belief.png',
       truthImage: '/exploration_example/step5_gt.png'
@@ -172,52 +241,136 @@ const resolveAssetPath = (path) => {
   let sliderElement = null;
   let isPlaying = false;
   let playInterval = null;
+  let to1, to2, to3; // Timeout handles for animation stages
 
-  const updateStep = (index) => {
+  const updateStep = (index, animate = false) => {
     const step = steps[index];
     if (!step) return;
 
+    // Clear any pending animation timeouts
+    clearTimeout(to1);
+    clearTimeout(to2);
+    clearTimeout(to3);
+
     const currentStepTop = document.getElementById('ae-current-step-top');
     const currentStepMid = document.getElementById('ae-current-step-mid');
-    const observationImage = document.getElementById('ae-observation-image');
-    const observationText = document.getElementById('ae-observation-text');
-    const actionText = document.getElementById('ae-action-text');
-    const beliefImage = document.getElementById('ae-belief-image');
-    const truthImage = document.getElementById('ae-truth-image');
-
+    
+    // Always update slider and step counters immediately
     if (currentStepTop) currentStepTop.textContent = String(index);
     if (currentStepMid) currentStepMid.textContent = String(index);
-    if (observationImage) observationImage.src = resolveAssetPath(step.observationImage);
-    if (observationText) observationText.textContent = step.observationText;
-    if (actionText) actionText.textContent = step.action;
-    if (beliefImage) beliefImage.src = resolveAssetPath(step.beliefImage);
-    if (truthImage) truthImage.src = resolveAssetPath(step.truthImage);
-
-    if (observationImage) {
-      const hasObservation = Boolean(step.observationImage);
-      observationImage.style.display = hasObservation ? 'block' : 'none';
-      observationImage.parentElement.style.display = hasObservation ? 'block' : 'none';
-    }
-
-    if (beliefImage) {
-      const hasBelief = Boolean(step.beliefImage);
-      beliefImage.style.display = hasBelief ? 'block' : 'none';
-      beliefImage.parentElement.style.display = hasBelief ? 'block' : 'none';
-    }
-
-    if (truthImage) {
-      const hasTruth = Boolean(step.truthImage);
-      truthImage.style.display = hasTruth ? 'block' : 'none';
-      truthImage.parentElement.style.display = hasTruth ? 'block' : 'none';
-    }
-
+    
     if (sliderElement) {
+      sliderElement.value = String(index);
       const percentage = steps.length > 1 ? (index / (steps.length - 1)) * 100 : 0;
       sliderElement.style.background = `linear-gradient(90deg, #7c3aed 0%, #7c3aed ${percentage}%, #e7e3f2 ${percentage}%, #e7e3f2 100%)`;
     }
 
-    if (sliderElement) {
-      sliderElement.value = String(index);
+    if (animate) {
+        // Animation Sequence:
+        // 1. Fade out Action
+        // 2. Update Action & Fade In
+        // 3. Wait 0.5s
+        // 4. Fade out Rest (Obs, Belief, Truth)
+        // 5. Update Rest & Fade In
+
+        const actionText = document.getElementById('ae-action-text');
+        
+        // Stage 1: Fade out Action
+        if (actionText) actionText.classList.add('ae-fade-out');
+
+        to1 = setTimeout(() => {
+            // Stage 2: Update Action & Fade In
+            if (actionText) {
+                actionText.textContent = step.action;
+                actionText.classList.remove('ae-fade-out');
+            }
+
+            // Stage 3: Wait 0.5s then process the rest
+            to2 = setTimeout(() => {
+                 const obsImage = document.getElementById('ae-observation-image');
+                 const obsText = document.getElementById('ae-observation-text');
+                 const truthImage = document.getElementById('ae-truth-image');
+                 const beliefImage = document.getElementById('ae-belief-image');
+                 
+                 const restElements = [obsImage, obsText, truthImage, beliefImage].filter(el => el);
+                 
+                 // Stage 4: Fade out Rest
+                 restElements.forEach(el => el.classList.add('ae-fade-out'));
+
+                 to3 = setTimeout(() => {
+                     // Stage 5: Update Rest & Fade In
+                     const noObsText = document.getElementById('ae-vision-no-obs');
+                     
+                     if (obsImage && noObsText) {
+                         if (step.observationImage) {
+                             obsImage.src = resolveAssetPath(step.observationImage);
+                             obsImage.style.display = 'block';
+                             noObsText.style.display = 'none';
+                         } else {
+                             obsImage.style.display = 'none';
+                             noObsText.style.display = 'block';
+                         }
+                     }
+                     
+                     if (obsText) obsText.textContent = step.observationText || 'No observation.';
+                     
+                     if (beliefImage) {
+                        beliefImage.src = resolveAssetPath(step.beliefImage);
+                        const hasBelief = Boolean(step.beliefImage);
+                        beliefImage.style.display = hasBelief ? 'block' : 'none';
+                        beliefImage.parentElement.style.display = hasBelief ? 'block' : 'none';
+                     }
+                     
+                     if (truthImage) {
+                        truthImage.src = resolveAssetPath(step.truthImage);
+                        const hasTruth = Boolean(step.truthImage);
+                        truthImage.style.display = hasTruth ? 'block' : 'none';
+                        truthImage.parentElement.style.display = hasTruth ? 'block' : 'none';
+                     }
+
+                     restElements.forEach(el => el.classList.remove('ae-fade-out'));
+                 }, 800); // Transition duration (CSS matches this)
+
+            }, 500); // Delay between Action update and Rest update
+        }, 800); // Transition duration for Action fade out
+
+    } else {
+        // Immediate update without animation
+        const observationImage = document.getElementById('ae-observation-image');
+        const noObsText = document.getElementById('ae-vision-no-obs');
+        const observationText = document.getElementById('ae-observation-text');
+        const beliefImage = document.getElementById('ae-belief-image');
+        const truthImage = document.getElementById('ae-truth-image');
+        const actionText = document.getElementById('ae-action-text');
+
+        if (observationImage && noObsText) {
+             if (step.observationImage) {
+                 observationImage.src = resolveAssetPath(step.observationImage);
+                 observationImage.style.display = 'block';
+                 noObsText.style.display = 'none';
+             } else {
+                 observationImage.style.display = 'none';
+                 noObsText.style.display = 'block';
+             }
+         }
+         if (observationText) observationText.textContent = step.observationText || 'No observation.';
+         if (actionText) actionText.textContent = step.action;
+         if (beliefImage) {
+             beliefImage.src = resolveAssetPath(step.beliefImage);
+             const hasBelief = Boolean(step.beliefImage);
+             beliefImage.style.display = hasBelief ? 'block' : 'none';
+             beliefImage.parentElement.style.display = hasBelief ? 'block' : 'none';
+         }
+         if (truthImage) {
+             truthImage.src = resolveAssetPath(step.truthImage);
+             const hasTruth = Boolean(step.truthImage);
+             truthImage.style.display = hasTruth ? 'block' : 'none';
+             truthImage.parentElement.style.display = hasTruth ? 'block' : 'none';
+         }
+         
+         // Ensure opacity is 1
+         const fadeElements = document.querySelectorAll('.ae-fade-target');
+         fadeElements.forEach(el => el.classList.remove('ae-fade-out'));
     }
 
     const prevButton = document.getElementById('ae-prev-step');
@@ -247,21 +400,21 @@ const resolveAssetPath = (path) => {
     if (slider) {
       slider.addEventListener('input', (event) => {
         const value = Number(event.target.value) || 0;
-        updateStep(value);
+        updateStep(value, false); // No animation delay on slider drag for responsiveness
       });
     }
 
     if (prevButton) {
       prevButton.addEventListener('click', () => {
         const current = Number(sliderElement?.value || '0');
-        if (current > 0) updateStep(current - 1);
+        if (current > 0) updateStep(current - 1, true); // Animate on click
       });
     }
 
     if (nextButton) {
       nextButton.addEventListener('click', () => {
         const current = Number(sliderElement?.value || '0');
-        if (current < steps.length - 1) updateStep(current + 1);
+        if (current < steps.length - 1) updateStep(current + 1, true); // Animate on click
       });
     }
 
@@ -280,14 +433,21 @@ const resolveAssetPath = (path) => {
       isPlaying = true;
       if (playIcon) playIcon.style.display = 'none';
       if (pauseIcon) pauseIcon.style.display = 'block';
+      
+      // If we are at the end, restart
+      const current = Number(sliderElement?.value || '0');
+      if (current === steps.length - 1) {
+          updateStep(0, false);
+      }
+
       playInterval = setInterval(() => {
         const current = Number(sliderElement?.value || '0');
         if (current < steps.length - 1) {
-          updateStep(current + 1);
+          updateStep(current + 1, true); // Animate during playback
         } else {
           stopPlayback();
         }
-      }, 3000);
+      }, 4000); // 4 seconds per step (allow for slower transition)
     };
 
     if (playPauseButton) {
@@ -301,6 +461,6 @@ const resolveAssetPath = (path) => {
       });
     }
 
-    updateStep(0);
+    updateStep(0, false);
   });
 </script>

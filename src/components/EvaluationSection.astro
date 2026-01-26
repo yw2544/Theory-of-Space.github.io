@@ -1,10 +1,13 @@
 ---
-// Algorithm.astro - Leaderboard section showing model performance comparisons
+// EvaluationSection.astro - Leaderboard section showing model performance comparisons
+const rawBase = import.meta.env.BASE_URL ?? '/';
+const normalizedBase = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
+const assetPath = (path: string) => `${normalizedBase}${path.replace(/^\//, '')}`;
 ---
 
 <section id="leaderboard" class="content-section alt-background">
   <div class="section-container">
-    <h2 class="section-title">Leaderboard</h2>
+    <h2 class="section-title">Evaluation Results</h2>
     <p class="section-description">Performance comparison of different models on <span class="tos-text">Theory of Space</span> (ToS) benchmark. Dark highlighting indicates the best result within each category, light highlighting denotes the second-best.</p>
     
     <div class="leaderboard-container">
@@ -44,6 +47,45 @@
             <!-- Data populated by JS -->
           </tbody>
         </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Performance Conclusion (Grid) -->
+<section id="key-findings-grid" class="content-section">
+  <div class="section-container">
+    <div class="results-analysis-single">
+      <h3 class="analysis-heading">Performance Conclusion</h3>
+      <div class="findings-grid">
+        <div class="finding-item">
+          <span class="finding-icon">🎯</span>
+          <div class="finding-content">
+            <strong>Active exploration is the bottleneck</strong>
+            <span class="finding-detail">GPT-5.2: 0.57→0.46 | GEMINI-3 PRO: 0.60→0.57 (passive→active)</span>
+          </div>
+        </div>
+        <div class="finding-item">
+          <span class="finding-icon">📊</span>
+          <div class="finding-content">
+            <strong>Substantial modality gap</strong>
+            <span class="finding-detail">GPT-5.2: 0.72 text vs 0.46 vision | GEMINI-3 PRO: 0.81 text vs 0.57 vision</span>
+          </div>
+        </div>
+        <div class="finding-item">
+          <span class="finding-icon">⚡</span>
+          <div class="finding-content">
+            <strong>Inefficient exploration</strong>
+            <span class="finding-detail">Proxy agents: ~10 steps to coverage | Models: far more steps with no gain</span>
+          </div>
+        </div>
+        <div class="finding-item">
+          <span class="finding-icon">🔍</span>
+          <div class="finding-content">
+            <strong>Exploration patterns differ</strong>
+            <span class="finding-detail">GPT-5.2: jumps to doors early | GEMINI-3 PRO: rotates first like scout proxy</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -191,10 +233,7 @@
   
   #leaderboard .col-header span {
     display: inline-block;
-    /* writing-mode: vertical-rl; */
-    /* transform: rotate(180deg); */
     white-space: nowrap;
-    /* height: 80px; */
     line-height: 1.2;
   }
 
@@ -235,11 +274,86 @@
     font-weight: 700;
     border-left: 2px solid #eee;
   }
+
+  /* Key Findings Styles (Grid) */
+  #key-findings-grid .section-container {
+    max-width: 1300px;
+  }
+  
+  #key-findings-grid .results-analysis-single {
+    background: #fff;
+    border-radius: 12px;
+    padding: 1.5rem 2rem;
+    margin: 2rem 0;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e2e8f0;
+  }
+
+  .analysis-heading {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #2a2f6c;
+    margin: 0 0 1.25rem 0;
+    text-align: center;
+  }
+
+  #key-findings-grid .findings-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  #key-findings-grid .finding-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border-left: 3px solid #2a2f6c;
+  }
+
+  #key-findings-grid .finding-icon {
+    font-size: 1.25rem;
+    flex-shrink: 0;
+  }
+
+  #key-findings-grid .finding-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  #key-findings-grid .finding-content strong {
+    font-size: 0.95rem;
+    color: #1f2a60;
+  }
+
+  #key-findings-grid .finding-detail {
+    font-size: 0.85rem;
+    color: #666;
+    line-height: 1.4;
+  }
+
+  @media (max-width: 768px) {
+    #key-findings-grid .findings-grid {
+      grid-template-columns: 1fr;
+    }
+  }
 </style>
 
 <script>
   // Data from Table 1 and Table 2
-  const tosData = {
+  type ModelData = {
+    type: string;
+    name: string;
+    exp?: number;
+    route: number[];
+    survey: number[];
+    avg: number;
+  };
+
+  const tosData: Record<string, Record<string, ModelData[]>> = {
     active: {
       vision: [
         // Route: [direction, persp.take, perc.dec, act2view, view2act]
@@ -256,7 +370,7 @@
         { type: 'proprietary', name: 'CLAUDE-4.5 SONNET', exp: 18.7, route: [0.660, 0.650, 0.789, 0.620, 0.530], survey: [0.692, 0.763, 0.672, 0.565], avg: 0.688 },
         { type: 'openweight', name: 'GLM-4.6V', exp: 14.5, route: [0.205, 0.197, 0.120, 0.152, 0.037], survey: [0.136, 0.093, 0.261, 0.225], avg: 0.189 },
         { type: 'openweight', name: 'INTERNVL-3.5', exp: 15.0, route: [0.293, 0.453, 0.263, 0.363, 0.080], survey: [0.307, 0.273, 0.391, 0.340], avg: 0.335 },
-        { type: 'openweight', name: 'QWEN3-VL', exp: 14.1, route: [0.337, 0.480, 0.507, 0.360, 0.093], survey: [0.360, 0.353, 0.353, 0.471], avg: 0.368 }
+        { type: 'openweight', name: 'QWEN3-VL', route: [0.403, 0.682, 0.552, 0.435, 0.173], survey: [0.430, 0.400, 0.423, 0.549], avg: 0.450 }
       ]
     },
     passive: {
@@ -293,8 +407,11 @@
       tab.addEventListener('click', () => {
         modeTabs.forEach(t => t.classList.remove('active'));
         tab.classList.add('active');
-        currentMode = (tab as HTMLElement).dataset.mode;
-        renderTable();
+        const mode = (tab as HTMLElement).dataset.mode;
+        if (mode) {
+          currentMode = mode;
+          renderTable();
+        }
       });
     });
 
@@ -302,8 +419,11 @@
       btn.addEventListener('click', () => {
         envBtns.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        currentEnv = (btn as HTMLElement).dataset.env;
-        renderTable();
+        const env = (btn as HTMLElement).dataset.env;
+        if (env) {
+          currentEnv = env;
+          renderTable();
+        }
       });
     });
 
@@ -358,11 +478,11 @@
     const dataList = tosData[currentMode][currentEnv];
     
     // Calculate highlights dynamically
-    const calculateHighlights = (data, hasExp) => {
+    const calculateHighlights = (data: ModelData[], hasExp: boolean) => {
       const highlights: { [key: string]: number[] } = {};
       const numCols = hasExp ? 1 + 5 + 4 + 1 : 5 + 4 + 1; // exp + route + survey + avg
       
-      data.forEach(model => {
+      data.forEach((model) => {
         highlights[model.name] = new Array(numCols).fill(0);
       });
       
@@ -370,10 +490,12 @@
       
       // Exp cost (lower is better)
       if (hasExp) {
-        const expValues = data.map(m => m.exp);
+        const expValues = data.map(m => m.exp || 0);
         const bestExp = Math.min(...expValues);
-        const secondExp = [...new Set(expValues)].sort((a, b) => a - b)[1];
-        data.forEach((model, idx) => {
+        const uniqueValues = [...new Set(expValues)].sort((a, b) => a - b);
+        const secondExp = uniqueValues.length > 1 ? uniqueValues[1] : bestExp;
+        
+        data.forEach((model) => {
           if (model.exp === bestExp) highlights[model.name][colIdx] = 1;
           else if (model.exp === secondExp) highlights[model.name][colIdx] = 2;
         });
@@ -384,8 +506,10 @@
       for (let i = 0; i < 5; i++) {
         const values = data.map(m => m.route[i]);
         const best = Math.max(...values);
-        const second = [...new Set(values)].sort((a, b) => b - a)[1];
-        data.forEach(model => {
+        const uniqueValues = [...new Set(values)].sort((a, b) => b - a);
+        const second = uniqueValues.length > 1 ? uniqueValues[1] : best;
+        
+        data.forEach((model) => {
           if (model.route[i] === best) highlights[model.name][colIdx] = 1;
           else if (model.route[i] === second) highlights[model.name][colIdx] = 2;
         });
@@ -396,8 +520,10 @@
       for (let i = 0; i < 4; i++) {
         const values = data.map(m => m.survey[i]);
         const best = Math.max(...values);
-        const second = [...new Set(values)].sort((a, b) => b - a)[1];
-        data.forEach(model => {
+        const uniqueValues = [...new Set(values)].sort((a, b) => b - a);
+        const second = uniqueValues.length > 1 ? uniqueValues[1] : best;
+        
+        data.forEach((model) => {
           if (model.survey[i] === best) highlights[model.name][colIdx] = 1;
           else if (model.survey[i] === second) highlights[model.name][colIdx] = 2;
         });
@@ -407,8 +533,10 @@
       // Avg (higher is better)
       const avgValues = data.map(m => m.avg);
       const bestAvg = Math.max(...avgValues);
-      const secondAvg = [...new Set(avgValues)].sort((a, b) => b - a)[1];
-      data.forEach(model => {
+      const uniqueValues = [...new Set(avgValues)].sort((a, b) => b - a);
+      const secondAvg = uniqueValues.length > 1 ? uniqueValues[1] : bestAvg;
+      
+      data.forEach((model) => {
         if (model.avg === bestAvg) highlights[model.name][colIdx] = 1;
         else if (model.avg === secondAvg) highlights[model.name][colIdx] = 2;
       });
@@ -418,7 +546,7 @@
     
     const hlRules = calculateHighlights(dataList, hasExp);
 
-    dataList.forEach(model => {
+    dataList.forEach((model) => {
       const tr = document.createElement('tr');
       tr.className = model.type === 'proprietary' ? 'proprietary-row' : 'openweight-row';
       
@@ -430,18 +558,18 @@
       if (hasExp) {
         const hl = modelHl[colIdx++] || 0;
         const cls = hl === 1 ? 'best-score' : (hl === 2 ? 'second-best-score' : '');
-        html += `<td class="exp-cost ${cls}">${model.exp.toFixed(1)}</td>`;
+        html += `<td class="exp-cost ${cls}">${(model.exp || 0).toFixed(1)}</td>`;
       }
 
       // Route
-      model.route.forEach(val => {
+      model.route.forEach((val) => {
         const hl = modelHl[colIdx++] || 0;
         const cls = hl === 1 ? 'best-score' : (hl === 2 ? 'second-best-score' : '');
         html += `<td class="${cls}">${(val * 100).toFixed(1)}</td>`;
       });
 
       // Survey
-      model.survey.forEach(val => {
+      model.survey.forEach((val) => {
         const hl = modelHl[colIdx++] || 0;
         const cls = hl === 1 ? 'best-score' : (hl === 2 ? 'second-best-score' : '');
         html += `<td class="${cls}">${(val * 100).toFixed(1)}</td>`;
@@ -456,4 +584,4 @@
       tbody.appendChild(tr);
     });
   }
-</script> 
+</script>
