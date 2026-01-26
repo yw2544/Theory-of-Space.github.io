@@ -6,9 +6,19 @@
   <div class="section-container">
     <h2 class="section-title">Spatial Belief Probing</h2>
     <p class="section-description">
-      We measure final map correctness and turn-level perception, local-global consistency, stability, self-tracking, and uncertainty in text- vs. vision-worlds.
-      Across models, vision lags text on all metrics, with the largest drop on orientation and stability, while self-tracking remains relatively strong.
+      We probe the agent's internal belief state to understand <em>why</em> failures occur.
     </p>
+    
+    <div class="metrics-explanation">
+      <ul class="metrics-list">
+        <li><strong>Correctness (final):</strong> Evaluates the predicted <em>global</em> map at the last turn.</li>
+        <li><strong>Perception:</strong> Compares the predicted <em>local</em> map to the ground-truth local map for the current field of view.</li>
+        <li><strong>Self-tracking:</strong> Compares the agent pose inferred from the predicted global map to the ground-truth agent state.</li>
+        <li><strong>Local ↔ Global:</strong> Compares local and global predictions <em>within the same turn</em> (coherence check).</li>
+        <li><strong>Stability:</strong> Checks if previously observed objects degrade in the map over time.</li>
+        <li><strong>Uncertainty:</strong> Can the agent identify which regions it hasn't seen yet?</li>
+      </ul>
+    </div>
 
     <div class="table-wrapper">
       <table class="probing-table">
@@ -132,7 +142,7 @@
 
 <style>
   #probing .section-container {
-    max-width: 1300px;
+    max-width: 1000px;
   }
 
   /* Table Styles */
@@ -147,17 +157,17 @@
   #probing .probing-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
   }
 
   #probing th {
-    padding: 0.8rem 0.5rem;
+    padding: 0.6rem 0.4rem;
     text-align: center;
     border: 1px solid #eee;
   }
 
   #probing td {
-    padding: 0.6rem 0.4rem;
+    padding: 0.5rem 0.3rem;
     text-align: center;
     border: 1px solid #eee;
   }
@@ -275,5 +285,34 @@
     .findings-grid {
       grid-template-columns: 1fr;
     }
+  }
+
+  .metrics-explanation {
+    max-width: 900px;
+    margin: 0 auto 2rem;
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+  }
+
+  .metrics-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+  }
+
+  .metrics-list li {
+    font-size: 0.95rem;
+    color: #4b5563;
+    line-height: 1.5;
+  }
+
+  .metrics-list li strong {
+    color: #2a2f6c;
+    font-weight: 700;
   }
 </style>

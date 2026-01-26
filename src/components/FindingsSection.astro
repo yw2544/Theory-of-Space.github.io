@@ -7,15 +7,15 @@ const assetPath = (path: string) => `${normalizedBase}${path.replace(/^\//, '')}
 <!-- Detailed Analysis (Expandable Cards) -->
 <section id="detailed-analysis" class="content-section">
   <div class="section-container">
-    <h3 class="analysis-heading" style="margin-bottom: 2rem;">Detailed Analysis</h3>
+    <h2 class="section-title">Key Findings</h2>
     <div class="findings-grid-cards">
       <!-- Finding 1 -->
-      <details class="finding-card finding-1">
+      <details class="finding-card finding-1" open>
         <summary class="finding-header">
           <div class="finding-number">01</div>
           <div class="finding-content">
             <h3 class="finding-title">Active Exploration Bottleneck</h3>
-            <p class="finding-summary">Active planning is the bottleneck.</p>
+            <p class="finding-summary">Active exploration is the bottleneck.</p>
           </div>
           <span class="finding-toggle" aria-hidden="true"></span>
         </summary>
@@ -24,30 +24,34 @@ const assetPath = (path: string) => `${normalizedBase}${path.replace(/^\//, '')}
             Active exploration is a key bottleneck: performance drops when models must choose actions under partial observability, compared to passive comprehension from standardized logs.
           </p>
           <div class="finding-media-grid">
-            <img
-              src={assetPath('passive-active-gap-text.png')}
-              alt="Passive vs active gap in text world"
-              class="finding-media"
-              loading="lazy"
-            />
-            <img
-              src={assetPath('passive-active-gap-vision.png')}
-              alt="Passive vs active gap in vision world"
-              class="finding-media"
-              loading="lazy"
-            />
-            <img
-              src={assetPath('infogain.png')}
-              alt="Information gain analysis"
-              class="finding-media"
-              loading="lazy"
-            />
+            <div class="finding-media-left-col">
+              <img
+                src={assetPath('passive-active-gap-text.png')}
+                alt="Passive vs active gap in text world"
+                class="finding-media media-lg"
+                loading="lazy"
+              />
+              <img
+                src={assetPath('passive-active-gap-vision.png')}
+                alt="Passive vs active gap in vision world"
+                class="finding-media media-lg"
+                loading="lazy"
+              />
+            </div>
+            <div class="finding-media-right-col">
+              <img
+                src={assetPath('infogain.png')}
+                alt="Information gain analysis"
+                class="finding-media"
+                loading="lazy"
+              />
+            </div>
           </div>
         </div>
       </details>
 
       <!-- Finding 2 -->
-      <details class="finding-card finding-2">
+      <details class="finding-card finding-2" open>
         <summary class="finding-header">
           <div class="finding-number">02</div>
           <div class="finding-content">
@@ -78,24 +82,64 @@ const assetPath = (path: string) => `${normalizedBase}${path.replace(/^\//, '')}
       </details>
 
       <!-- Finding 3 -->
-      <details class="finding-card finding-3">
+      <details class="finding-card finding-3" open>
         <summary class="finding-header">
           <div class="finding-number">03</div>
           <div class="finding-content">
-            <h3 class="finding-title">High Cost, Low Return</h3>
-            <p class="finding-summary">Steps grow, gains flatten.</p>
+            <h3 class="finding-title">Active-Passive Gap Increases with Complexity</h3>
+            <p class="finding-summary">Gemini-3 Pro scales much better.</p>
           </div>
           <span class="finding-toggle" aria-hidden="true"></span>
         </summary>
         <div class="finding-details">
           <p class="finding-text">
-            Exploration shows high cost, low return: more steps often yield limited gains as information gain saturates, indicating inefficient uncertainty reduction.
+            The active–passive gap increases with complexity; Gemini-3 Pro scales much better. As the number of rooms increases, exploration cost rises accordingly. For both GPT-5.2 and Gemini-3 Pro, performance declines as the room number increases, and the active–passive performance gap widens with room number.
           </p>
+          
+          <div class="finding-table-wrapper">
+            <table class="finding-table">
+              <thead>
+                <tr class="table-header-main">
+                  <th rowspan="2" class="col-method">Methods</th>
+                  <th colspan="3" class="header-sep">2-room</th>
+                  <th colspan="3" class="header-sep">4-room</th>
+                </tr>
+                <tr class="table-header-main">
+                  <th class="col-sub">pass.</th><th class="col-sub">act.</th><th class="col-sub">exp.</th>
+                  <th class="col-sub">pass.</th><th class="col-sub">act.</th><th class="col-sub">exp.</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td colspan="7" class="col-group">Text-based World</td></tr>
+                <tr>
+                  <td class="row-label">GPT-5.2</td>
+                  <td class="best-score">92.3</td><td>77.9</td><td>6.3</td>
+                  <td class="best-score">87.0</td><td>66.4</td><td>16.0</td>
+                </tr>
+                <tr>
+                  <td class="row-label">Gemini-3 Pro</td>
+                  <td>84.8</td><td class="best-score">80.7</td><td>6.2</td>
+                  <td>81.2</td><td class="best-score">77.6</td><td>19.8</td>
+                </tr>
+                <tr><td colspan="7" class="col-group">Vision-based World</td></tr>
+                <tr>
+                  <td class="row-label">GPT-5.2</td>
+                  <td class="best-score">59.0</td><td>51.2</td><td>10.7</td>
+                  <td>52.5</td><td>40.2</td><td>23.1</td>
+                </tr>
+                <tr>
+                  <td class="row-label">Gemini-3 Pro</td>
+                  <td>57.1</td><td class="best-score">57.9</td><td>6.7</td>
+                  <td class="best-score">56.4</td><td class="best-score">51.6</td><td>19.3</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </details>
 
       <!-- Finding 4 -->
-      <details class="finding-card finding-4">
+      <details class="finding-card finding-4" open>
         <summary class="finding-header">
           <div class="finding-number">04</div>
           <div class="finding-content">
@@ -274,8 +318,19 @@ const assetPath = (path: string) => `${normalizedBase}${path.replace(/^\//, '')}
 
   .finding-media-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: 1.5fr 1fr; /* Adjusted for Left/Right split */
     gap: 1.5rem;
+  }
+  
+  .finding-media-left-col {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .finding-media-right-col {
+    display: flex;
+    align-items: center; /* Center vertically if needed */
   }
 
   .finding-media-grid-2 {
@@ -289,6 +344,82 @@ const assetPath = (path: string) => `${normalizedBase}${path.replace(/^\//, '')}
     box-shadow: 0 12px 28px rgba(15, 23, 42, 0.12);
     border: 1px solid #e2e8f0;
     background: #fff;
+  }
+  
+  .media-lg {
+    /* Optional: Ensure they take full width of column */
+    width: 100%;
+  }
+
+  /* Table Styles for Finding 3 */
+  .finding-table-wrapper {
+    overflow-x: auto;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    background: white;
+    margin-top: 1rem;
+    max-width: 800px;
+  }
+
+  .finding-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+  }
+
+  .finding-table th, .finding-table td {
+    padding: 0.5rem;
+    text-align: center;
+    border: 1px solid #eee;
+  }
+
+  .table-header-main {
+    background: #f0f4ff;
+    color: #2a2f6c;
+    font-weight: 700;
+    padding: 0.6rem;
+  }
+
+  .header-sep {
+    border-top: 2px solid #dde1e6;
+  }
+
+  .col-method {
+    text-align: left;
+    padding-left: 1rem;
+    background: #f8f9fa;
+    font-weight: 700;
+  }
+
+  .col-group {
+    background: #fff;
+    font-weight: 700;
+    color: #444;
+  }
+
+  .col-sub {
+    font-size: 0.8rem;
+    color: #666;
+    font-weight: 600;
+  }
+
+  .row-label {
+    text-align: left;
+    padding-left: 1rem;
+    font-weight: 600;
+    color: #333;
+    background: #fcfcfc;
+  }
+  
+  .best-score {
+    font-weight: 700;
+    background-color: rgba(100, 100, 100, 0.1);
+  }
+
+  @media (max-width: 768px) {
+    .finding-media-grid {
+        grid-template-columns: 1fr;
+    }
   }
 
   details[open] .finding-header {
