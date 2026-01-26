@@ -1,15 +1,14 @@
 ---
-// FindingsSection.astro - Key findings with creative UI design
 const rawBase = import.meta.env.BASE_URL ?? '/';
 const normalizedBase = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
 const assetPath = (path: string) => `${normalizedBase}${path.replace(/^\//, '')}`;
 ---
-<section id="results" class="content-section">
-  <div class="section-container">
-    <h2 class="section-title">Key Findings</h2>
-    <p class="section-description">Our analysis reveals critical insights into spatial belief construction capabilities of foundation models.</p>
 
-    <div class="findings-grid">
+<!-- Detailed Analysis (Expandable Cards) -->
+<section id="detailed-analysis" class="content-section">
+  <div class="section-container">
+    <h3 class="analysis-heading" style="margin-bottom: 2rem;">Detailed Analysis</h3>
+    <div class="findings-grid-cards">
       <!-- Finding 1 -->
       <details class="finding-card finding-1">
         <summary class="finding-header">
@@ -100,14 +99,14 @@ const assetPath = (path: string) => `${normalizedBase}${path.replace(/^\//, '')}
         <summary class="finding-header">
           <div class="finding-number">04</div>
           <div class="finding-content">
-            <h3 class="finding-title">Perception Bottleneck</h3>
-            <p class="finding-summary">Perception noise breaks belief.</p>
+            <h3 class="finding-title">Bottleneck: Perception & Stability</h3>
+            <p class="finding-summary">Perception noise and unstable belief.</p>
           </div>
           <span class="finding-toggle" aria-hidden="true"></span>
         </summary>
         <div class="finding-details">
           <p class="finding-text">
-            Probing points to perception as a main bottleneck: perception errors undermine belief consistency and stability, degrading overall spatial belief quality.
+            Vision perception remains a key bottleneck, especially for object orientation. Unstable cognitive map prediction degrades spatial belief beyond initial perception.
           </p>
         </div>
       </details>
@@ -116,11 +115,20 @@ const assetPath = (path: string) => `${normalizedBase}${path.replace(/^\//, '')}
 </section>
 
 <style>
-  #results .section-container {
+  /* Detailed Analysis (Cards) Styles */
+  #detailed-analysis .section-container {
     max-width: var(--page-max-width, 1500px);
   }
 
-  .findings-grid {
+  .analysis-heading {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #2a2f6c;
+    margin: 0 0 1.25rem 0;
+    text-align: center;
+  }
+
+  .findings-grid-cards {
     display: flex;
     flex-direction: column;
     gap: 2rem;
@@ -364,4 +372,3 @@ const assetPath = (path: string) => `${normalizedBase}${path.replace(/^\//, '')}
     }
   }
 </style>
-

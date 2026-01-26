@@ -1,0 +1,279 @@
+---
+// ProbingSection.astro - Spatial belief probing table
+---
+
+<section id="probing" class="content-section">
+  <div class="section-container">
+    <h2 class="section-title">Spatial Belief Probing</h2>
+    <p class="section-description">
+      We measure final map correctness and turn-level perception, local-global consistency, stability, self-tracking, and uncertainty in text- vs. vision-worlds.
+      Across models, vision lags text on all metrics, with the largest drop on orientation and stability, while self-tracking remains relatively strong.
+    </p>
+
+    <div class="table-wrapper">
+      <table class="probing-table">
+        <thead>
+          <!-- Row 1: Group Headers -->
+          <tr>
+            <th rowspan="2" class="model-header">Methods</th>
+            <th colspan="2" class="group-header">Correctness</th>
+            <th colspan="2" class="group-header">Perception</th>
+            <th colspan="2" class="group-header">Local &harr; Global</th>
+            <th colspan="2" class="group-header">Stability</th>
+            <th colspan="2" class="group-header">Self-tracking</th>
+            <th rowspan="2" class="metric-header">Uncertainty</th>
+          </tr>
+          <!-- Row 2: Sub-headers -->
+          <tr>
+            <th class="sub-header">Ori.</th>
+            <th class="sub-header">Overall</th>
+            <th class="sub-header">Ori.</th>
+            <th class="sub-header">Pos.</th>
+            <th class="sub-header">Ori.</th>
+            <th class="sub-header">Pos.</th>
+            <th class="sub-header">Ori.</th>
+            <th class="sub-header">Pos.</th>
+            <th class="sub-header">Ori.</th>
+            <th class="sub-header">Pos.</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Vision-based World -->
+          <tr class="section-row">
+            <td colspan="12">Vision-based World</td>
+          </tr>
+          <tr class="proprietary-row">
+            <td class="model-name">GPT-5.2</td>
+            <td>20.2</td>
+            <td>32.2</td>
+            <td>33.5</td>
+            <td class="best-score">72.4</td>
+            <td class="best-score">57.9</td>
+            <td>58.7</td>
+            <td class="best-score">65.4</td>
+            <td>56.4</td>
+            <td>93.3</td>
+            <td>64.7</td>
+            <td>53.7</td>
+          </tr>
+          <tr class="proprietary-row">
+            <td class="model-name">GEMINI-3 PRO</td>
+            <td class="best-score">32.2</td>
+            <td class="best-score">52.1</td>
+            <td class="best-score">43.8</td>
+            <td>68.5</td>
+            <td>52.9</td>
+            <td class="best-score">68.3</td>
+            <td>61.8</td>
+            <td class="best-score">62.0</td>
+            <td class="best-score">98.8</td>
+            <td class="best-score">73.9</td>
+            <td class="best-score">68.8</td>
+          </tr>
+
+          <!-- Text-based World -->
+          <tr class="section-row">
+            <td colspan="12">Text-based World</td>
+          </tr>
+          <tr class="proprietary-row">
+            <td class="model-name">GPT-5.2</td>
+            <td>91.0</td>
+            <td>80.0</td>
+            <td class="best-score">100</td>
+            <td>86.8</td>
+            <td class="best-score">96.4</td>
+            <td class="best-score">86.0</td>
+            <td class="best-score">96.7</td>
+            <td>67.6</td>
+            <td>98.0</td>
+            <td>86.7</td>
+            <td>64.5</td>
+          </tr>
+          <tr class="proprietary-row">
+            <td class="model-name">GEMINI-3 PRO</td>
+            <td class="best-score">92.5</td>
+            <td class="best-score">81.4</td>
+            <td>99.9</td>
+            <td class="best-score">88.2</td>
+            <td>91.6</td>
+            <td>84.8</td>
+            <td>90.8</td>
+            <td class="best-score">67.7</td>
+            <td class="best-score">99.9</td>
+            <td class="best-score">85.2</td>
+            <td class="best-score">79.2</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Probing Conclusion -->
+    <div class="results-analysis-single" style="margin-top: 2rem;">
+      <h3 class="analysis-heading">Probing Conclusion</h3>
+      <div class="findings-grid">
+        <div class="finding-item">
+          <span class="finding-icon">👁️</span>
+          <div class="finding-content">
+            <strong>Perception is the bottleneck</strong>
+            <span class="finding-detail">Vision perception remains a key bottleneck, especially for object orientation.</span>
+          </div>
+        </div>
+        <div class="finding-item">
+          <span class="finding-icon">📉</span>
+          <div class="finding-content">
+            <strong>Unstable belief</strong>
+            <span class="finding-detail">Unstable cognitive map prediction degrades spatial belief beyond initial perception.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  #probing .section-container {
+    max-width: 1300px;
+  }
+
+  /* Table Styles */
+  #probing .table-wrapper {
+    overflow-x: auto;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    background: white;
+    margin-top: 2rem;
+  }
+
+  #probing .probing-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+  }
+
+  #probing th {
+    padding: 0.8rem 0.5rem;
+    text-align: center;
+    border: 1px solid #eee;
+  }
+
+  #probing td {
+    padding: 0.6rem 0.4rem;
+    text-align: center;
+    border: 1px solid #eee;
+  }
+
+  #probing .model-header {
+    text-align: left;
+    padding-left: 1rem;
+    background: #f8f9fa;
+    font-weight: 700;
+    min-width: 180px;
+    color: #333;
+  }
+
+  #probing .group-header {
+    font-weight: 700;
+    color: #2a2f6c;
+    background: #fff;
+  }
+
+  #probing .metric-header {
+    font-weight: 700;
+    color: #2a2f6c;
+    background: #fff;
+    vertical-align: middle;
+  }
+
+  #probing .sub-header {
+    font-size: 0.85rem;
+    background: #f0f4ff;
+    font-style: italic;
+    color: #555;
+  }
+
+  #probing .section-row td {
+    background: #eef2f6;
+    font-weight: 700;
+    text-align: left;
+    padding: 0.8rem 1rem;
+    color: #2a2f6c;
+    border-top: 2px solid #dde1e6;
+  }
+
+  #probing .model-name {
+    text-align: left;
+    padding-left: 1rem;
+    font-weight: 600;
+    color: #333;
+  }
+
+  #probing .proprietary-row {
+    background-color: #FFF4F0;
+  }
+
+  #probing .best-score {
+    background-color: rgba(100, 100, 100, 0.25);
+    font-weight: 700;
+  }
+
+  /* Findings Styles (replicated from KeyFindings for consistency) */
+  .results-analysis-single {
+    background: #fff;
+    border-radius: 12px;
+    padding: 1.5rem 2rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e2e8f0;
+  }
+
+  .analysis-heading {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #2a2f6c;
+    margin: 0 0 1.25rem 0;
+    text-align: center;
+  }
+
+  .findings-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .finding-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border-left: 3px solid #2a2f6c;
+  }
+
+  .finding-icon {
+    font-size: 1.25rem;
+    flex-shrink: 0;
+  }
+
+  .finding-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .finding-content strong {
+    font-size: 0.95rem;
+    color: #1f2a60;
+  }
+
+  .finding-detail {
+    font-size: 0.85rem;
+    color: #666;
+    line-height: 1.4;
+  }
+
+  @media (max-width: 768px) {
+    .findings-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
